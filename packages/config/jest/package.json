@@ -1,0 +1,8 @@
+{
+  "name": "@dsa/jest-config",
+  "version": "1.0.0",
+  "type": "module",
+  "files": [
+    "./jest-preset.js"
+  ]
+}
