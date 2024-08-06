@@ -1,0 +1,13 @@
+{
+  "name": "@dsa/tsconfig",
+  "version": "0.0.0",
+  "files": [
+    "./base.json"
+  ],
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}
