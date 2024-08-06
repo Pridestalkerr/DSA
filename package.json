@@ -9,7 +9,7 @@
   },
   "packageManager": "pnpm@8.10.5",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "turbo run clean"
   },
   "keywords": [],
   "author": "https://github.com/Pridestalkerr",

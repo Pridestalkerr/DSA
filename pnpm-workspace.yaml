@@ -2,6 +2,6 @@ packages:
   - packages/config/eslint
   - packages/config/tsconfig
   - packages/config/prettier
-  - packages/jest
-  - algorithms/
+  - packages/config/jest
+  - algorithms/quicksort
   - data-structures/
