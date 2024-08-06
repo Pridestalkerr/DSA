@@ -1,0 +1,22 @@
+{
+  "name": "dsa",
+  "version": "1.0.0",
+  "description": "A collection of Data Structures and Algorithms implementations.",
+  "license": "GLWTPL",
+  "type": "module",
+  "engines": {
+    "node": ">=v20.5.1"
+  },
+  "packageManager": "pnpm@8.10.5",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "https://github.com/Pridestalkerr",
+  "dependencies": {
+    "@manypkg/cli": "^0.21.4",
+    "prettier": "^3.3.3",
+    "turbo": "^2.0.11",
+    "typescript": "^5.5.4"
+  }
+}

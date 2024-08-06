@@ -1,0 +1,7 @@
+packages:
+  - packages/config/eslint
+  - packages/config/tsconfig
+  - packages/config/prettier
+  - packages/jest
+  - algorithms/
+  - data-structures/
