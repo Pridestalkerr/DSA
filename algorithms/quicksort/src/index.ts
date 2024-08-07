@@ -1,3 +1,4 @@
+import { quickselect } from "./quickselect";
 import { quicksort } from "./quicksort";
 
-export { quicksort };
+export { quicksort, quickselect };
