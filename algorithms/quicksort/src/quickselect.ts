@@ -1,5 +1,6 @@
 import { getDefaultCompare, OptionalCMP } from "./cmp";
-import { checkBounds, LomutoPartition, Partition } from "./partition";
+import { checkBounds, HoarePartition, LomutoPartition, Partition } from "./partition";
+import { leftmostPivot, middlePivot } from "./pivot";
 import { SafeArray } from "./utils";
 
 type Options<T> = {
@@ -23,14 +24,15 @@ export const quickselect = <T>(arr: T[], k: number, opt: Options<T>): T => {
   const _cmp = opt.compare ?? getDefaultCompare(arr[0]);
   const sign = opt.descending ? -1 : 1;
   const cmp: typeof _cmp = (...args) => sign * _cmp(...args);
-  const partition = opt.partition ?? LomutoPartition;
+  const partition = opt.partition ?? HoarePartition;
 
   // 2. Quickselect helper
   const select = (left: number, right: number): T => {
     if (left === right) return arr[left]!;
-    const pivotIndex = partition(arr, { left, right, compare: cmp });
-    if (k === pivotIndex) return arr[k]!;
-    if (k < pivotIndex) return select(left, pivotIndex - 1);
+    const pivotIndex = partition(arr, { left, right, compare: cmp, pivot: middlePivot });
+    // if (k === pivotIndex) return arr[k]!;
+    // NOTE: hoare partition is not stable, so we need to check both sides
+    if (k <= pivotIndex) return select(left, pivotIndex - 0);
     return select(pivotIndex + 1, right);
   };
 
