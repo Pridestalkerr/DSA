@@ -1,26 +1,27 @@
 import { getDefaultCompare, OptionalCMP } from "./cmp";
 import { checkBounds } from "./partition";
 
-export type PivotSelector = <T>(
-  opt: {
-    left: number;
-    right: number;
-    arr: T[];
-  } & OptionalCMP<T>,
-) => number;
+type Options<T> = {
+  left: number;
+  right: number;
+  arr: T[];
+  descending?: boolean;
+} & OptionalCMP<T>;
 
-export const rightmostPivot: PivotSelector = ({ right }) => right;
+export type PivotSelector<T> = (opt: Options<T>) => number;
 
-export const leftmostPivot: PivotSelector = ({ left }) => left;
+export const rightmostPivot = <T>({ right }: Options<T>) => right;
+
+export const leftmostPivot = <T>({ left }: Options<T>) => left;
 
 // TODO: middle calculation might overflow
-export const middlePivot: PivotSelector = ({ left, right }) => Math.floor((left + right) / 2);
+export const middlePivot = <T>({ left, right }: Options<T>) => Math.floor((left + right) / 2);
 
-export const randomPivot: PivotSelector = ({ left, right }) => {
+export const randomPivot = <T>({ left, right }: Options<T>) => {
   return Math.floor(Math.random() * (right - left + 1)) + left;
 };
 
-export const medianOfThreePivot: PivotSelector = ({ left, right, arr, compare }) => {
+export const medianOfThreePivot = <T>({ left, right, arr, compare }: Options<T>) => {
   checkBounds(arr, left, right);
   const mid = Math.floor((left + right) / 2);
   const a = arr[left]!;
@@ -34,7 +35,7 @@ export const medianOfThreePivot: PivotSelector = ({ left, right, arr, compare })
   return right;
 };
 
-export const quarterPivot: PivotSelector = ({ left, right }) => {
+export const quarterPivot = <T>({ left, right }: Options<T>) => {
   return Math.floor((right - left + 1) / 4) + left;
 };
 
