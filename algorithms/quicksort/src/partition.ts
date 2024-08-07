@@ -9,9 +9,9 @@ type Options<T> = {
   pivot?: PivotSelector<T>;
 } & OptionalCMP<T>;
 
-export type Partition = <T>(arr: T[], opt: Options<T>) => number;
+export type Partition<T> = (arr: T[], opt: Options<T>) => number;
 
-export const LomutoPartition: Partition = (arr, opt) => {
+export const LomutoPartition = <T>(arr: T[], opt: Options<T>) => {
   // 1. Setup
   const left = opt.left ?? 0;
   const right = opt.right ?? arr.length - 1;
@@ -19,7 +19,7 @@ export const LomutoPartition: Partition = (arr, opt) => {
   arr = SafeArray(arr);
   const _cmp = opt.compare ?? getDefaultCompare(arr[0]);
   const sign = opt.descending ? -1 : 1;
-  const cmp: typeof _cmp = (...args) => sign * cmp(...args);
+  const cmp: typeof _cmp = (...args) => sign * _cmp(...args);
   const pivot = opt.pivot ?? rightmostPivot;
 
   // 2. Choose pivot and move it to the end
