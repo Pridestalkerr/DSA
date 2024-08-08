@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import fn from "../src/index";
 
-describe("LC/XXXX.___", () => {
+describe("LC/885._Spiral_Matrix_III", () => {
   test("T1", () => {
     const r = 1;
     const c = 4;
