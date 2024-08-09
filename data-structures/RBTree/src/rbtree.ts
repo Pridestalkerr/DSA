@@ -1,8 +1,25 @@
+import { getDefaultCompare, HasDefaultCompare } from ".";
 import { RBTreeNode, Color, NILNode } from "./RBTreeNode";
 
-type RBTreeConstructor<T> = {
-  from?: T[]; // TODO: should allow iterators
-  compare: (a: T, b: T) => number;
+type RBTreeConstructor<T> = (HasDefaultCompare<T> extends true
+  ? // compare can be inferred from array values
+    // if from is provided, we allow compare to be optional
+    // if from is not provided, pass compare
+    | {
+          // dynamic array provided, could be empty so we cant infer
+          from: T[];
+          compare?: (a: T, b: T) => number;
+        }
+      | {
+          // static array initializer provided, we can infer compare
+          from: [T, ...T[]];
+          compare?: (a: T, b: T) => number;
+        }
+  : // compare cannot be inferred from array values, force pass compare, allow optional from
+    {
+      from?: T[];
+      compare: (a: T, b: T) => number;
+    }) & {
   descending?: boolean;
 };
 
@@ -11,15 +28,38 @@ export class RBTree<T> {
   protected cmp: (a: T, b: T) => number;
   protected length = 0;
   constructor({ from, compare, descending }: RBTreeConstructor<T>) {
-    if (from) {
-      // populate with given values
+    const hasFrom = from !== undefined;
+    const hasValues = hasFrom && from.length > 0;
+    const hasCMP = compare !== undefined;
+
+    // 1. Initialize cmp function
+    let _cmp = compare;
+    if (!hasCMP) {
+      // see if we can infer it
+      if (hasValues) {
+        _cmp = getDefaultCompare(from[0]);
+      } else {
+        throw new Error("No compare function provided and could not infer one from the array");
+      }
     }
     const sign = descending ? -1 : 1;
-    // TODO: to default, array values must be provided, could default later
-    this.cmp = (...args) => sign * compare(...args);
+    this.cmp = (...args) => sign * _cmp!(...args);
+
+    if (hasValues) {
+      for (const v of from) {
+        this.insert(v);
+      }
+    }
   }
 
-  public insert(node: RBTreeNode<T>) {
+  //   public insert(value: T) {}
+
+  /**
+   * Use at your own risk. Make sure to pass a fresh node.
+   *
+   * @internal
+   */
+  public __insert(node: RBTreeNode<T>) {
     type Safe = RBTreeNode<T>;
     let curr = this.root;
     let trail: RBTreeNode<T> | NILNode = NILNode;
@@ -68,6 +108,7 @@ export class RBTree<T> {
       } else if (cmpResult > 0) {
         curr = curr.right;
       } else {
+        // TODO: this should probably return the node instead
         return curr.value;
       }
     }
@@ -78,6 +119,13 @@ export class RBTree<T> {
     // garbage collection will take care of the rest
     this.root = NILNode;
     this.length = 0;
+  }
+
+  public delete(node: RBTreeNode<T>) {
+    if (node === NILNode) return undefined; // should this throw? maybe not
+
+    // X. Decrease tree size;
+    this.length--;
   }
 
   protected insertFixup(node: RBTreeNode<T>) {
