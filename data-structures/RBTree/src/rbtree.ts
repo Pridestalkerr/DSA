@@ -52,13 +52,15 @@ export class RBTree<T> {
     }
   }
 
-  //   public insert(value: T) {}
+  public insert(value: T) {
+    const fresh = new RBTreeNode<T>(value);
+    return this.__insert(fresh)?.value;
+  }
 
   /**
    * Use at your own risk. Make sure to pass a fresh node.
-   *
    * @internal
-   */
+   **/
   public __insert(node: RBTreeNode<T>) {
     type Safe = RBTreeNode<T>;
     let curr = this.root;
@@ -73,7 +75,7 @@ export class RBTree<T> {
       } else if (cmpResult > 0) {
         curr = curr.right;
       } else {
-        return; // duplicate value, TODO: notify somehow maybe?
+        return undefined; // duplicate value
       }
     }
     node.parent = trail;
@@ -97,6 +99,7 @@ export class RBTree<T> {
 
     // 5. Increment tree size
     this.length++;
+    return node;
   }
 
   public find(value: T) {
