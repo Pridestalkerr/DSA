@@ -92,11 +92,13 @@ export class BSTreeBase {
       } else if (P === header.left) {
         header.left = X; // maintain the leftmost node
       }
+      X.parent = P;
     } else {
       P.right = X;
       if (P === header.right) {
         header.right = X; // maintain the rightmost node
       }
+      X.parent = P;
     }
   }
 
