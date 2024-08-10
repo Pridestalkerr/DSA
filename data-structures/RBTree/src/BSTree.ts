@@ -13,6 +13,7 @@ export class BSTree<T> {
   public _lowerBound; // finds the first element that is not less than the key (<=)
   public _upperBound; // finds the first element that is greater than the key (>)
   public _insertAtPosition; // inserts a node at a given position
+  public _eraseNode; // removes a node from the tree
 
   // TODO: implement this
   constructor(cmp: typeof this.cmp) {
@@ -21,6 +22,7 @@ export class BSTree<T> {
     this._lowerBound = BSTreeBase.lowerBound<T>(this.cmp);
     this._upperBound = BSTreeBase.upperBound<T>(this.cmp);
     this._insertAtPosition = BSTreeBase.insertAtPosition<T>;
+    this._eraseNode = BSTreeBase.eraseNode<T>;
   }
 
   get size() {
@@ -36,8 +38,22 @@ export class BSTree<T> {
   }
 
   public find(key: T) {
-    return this.lowerBound(key);
+    const X = this.lowerBound(key);
+    if (X === undefined || this.cmp(X.key, key) !== 0) return undefined; // not found
+    return X;
   }
+
+  public erase(key: T) {
+    const X = this.find(key);
+    if (X === undefined) return undefined;
+    this._eraseNode(X, this.header);
+    this.length--;
+    return X;
+  }
+
+  // ===============================================
+  // ===============mostly private==================
+  // ===============================================
 
   public _insertUnique(key: T) {
     const [exists, P] = this.getInsertUniquePosition(key);
