@@ -4,14 +4,14 @@ export const enum Color {
 }
 
 export class RBTreeNode<T> {
-  value: T; // this can contain the key
+  key: T; // this can contain additional data as well, such as in a map implementation
   color: Color = Color.RED;
-  left: RBTreeNode<T> | NILNode = NILNode;
-  right: RBTreeNode<T> | NILNode = NILNode;
-  parent: RBTreeNode<T> | NILNode = NILNode;
+  left: RBTreeNode<T> | undefined = undefined;
+  right: RBTreeNode<T> | undefined = undefined;
+  parent: RBTreeNode<T> | undefined = undefined;
 
-  constructor(value: T) {
-    this.value = value;
+  constructor(key: T) {
+    this.key = key;
   }
   public isRed() {
     return this.color === Color.RED;
