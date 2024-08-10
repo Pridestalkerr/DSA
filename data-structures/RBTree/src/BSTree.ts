@@ -10,11 +10,11 @@ export class BSTree<T> {
   protected cmp: (a: T, b: T) => number;
   protected length = 0;
 
-  public _getInsertUniquePosition;
-  public _lowerBound; // finds the first element that is not less than the key (<=)
-  public _upperBound; // finds the first element that is greater than the key (>)
-  public _insertAtPosition; // inserts a node at a given position
-  public _eraseNode; // removes a node from the tree
+  public _getInsertUniquePosition: ReturnType<typeof BSTreeBase.getInsertUniquePosition<T>>;
+  public _lowerBound: ReturnType<typeof BSTreeBase.lowerBound<T>>;
+  public _upperBound: ReturnType<typeof BSTreeBase.upperBound<T>>;
+  public _insertAtPosition: typeof BSTreeBase.insertAtPosition<T>;
+  public _eraseNode: typeof BSTreeBase.eraseNode<T>;
 
   constructor({ from, compare, descending }: BSTreeConstructor<T>) {
     const hasFrom = from !== undefined;
@@ -75,6 +75,13 @@ export class BSTree<T> {
     this._eraseNode(X, this.header);
     this.length--;
     return X;
+  }
+
+  public clear() {
+    this.header.parent = undefined;
+    this.header.left = undefined;
+    this.header.right = undefined;
+    this.length = 0;
   }
 
   // ===============================================
