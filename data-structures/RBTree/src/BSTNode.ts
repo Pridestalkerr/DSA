@@ -2,6 +2,7 @@ export class BSTNode<T> {
   key: T;
   left: BSTNode<T> | undefined;
   right: BSTNode<T> | undefined;
+  parent: BSTNode<T> | undefined;
 
   constructor(key: T) {
     this.key = key;
