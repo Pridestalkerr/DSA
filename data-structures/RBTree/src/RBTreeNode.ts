@@ -1,21 +1,21 @@
+import { BSTNode } from "./BSTNode";
+
 export const enum Color {
   RED,
   BLACK,
 }
 
-export class RBTreeNode<T> {
-  key: T; // this can contain additional data as well, such as in a map implementation
+export class RBTreeNode<T> extends BSTNode<T> {
   color: Color = Color.RED;
-  left: RBTreeNode<T> | undefined = undefined;
-  right: RBTreeNode<T> | undefined = undefined;
-  parent: RBTreeNode<T> | undefined = undefined;
 
   constructor(key: T) {
-    this.key = key;
+    super(key);
   }
+
   public isRed() {
     return this.color === Color.RED;
   }
+
   public isBlack() {
     return this.color === Color.BLACK;
   }
