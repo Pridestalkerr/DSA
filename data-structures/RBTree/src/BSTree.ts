@@ -112,7 +112,7 @@ export class BSTree<T> {
   }
 }
 
-type BSTreeConstructor<T> = (HasDefaultCompare<T> extends true
+export type BSTreeConstructor<T> = (HasDefaultCompare<T> extends true
   ? // compare can be inferred from array values
     // if from is provided, we allow compare to be optional
     // if from is not provided, pass compare
@@ -125,6 +125,11 @@ type BSTreeConstructor<T> = (HasDefaultCompare<T> extends true
           // static array initializer provided, we can infer compare
           from: [T, ...T[]];
           compare?: (a: T, b: T) => number;
+        }
+      | {
+          // if compare is provided, then from can be ommitted
+          from?: T[];
+          compare: (a: T, b: T) => number;
         }
   : // compare cannot be inferred from array values, force pass compare, allow optional from
     {
