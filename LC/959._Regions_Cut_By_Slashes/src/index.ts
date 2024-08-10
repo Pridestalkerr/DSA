@@ -1,3 +1,8 @@
+/**
+ * The resulting grid is a planar graph, we can use Euler's formula to find the number of regions
+ * We only need to find the number of edges and vertices that the graph represents
+ *
+ */
 const euler = (grid: string[]): number => {
   return 0;
 };
@@ -19,7 +24,9 @@ const euler = (grid: string[]): number => {
  * After doing this, we can perform a gril fill algorithm to find the number of regions
  * The tricky part is being efficient into finding the next region to fill
  * We can initialize a set of all cells, and remove them as we fill them
- * Even more, we dont even need the actual grid
+ * Even more, we dont even need the actual grid, since the set represents it fully
+ * Additional Optimization:
+ * it is likely theres more empty space than barriers, so we can flip the set and all conditions
  *
  */
 const gridFill = (grid: string[]): number => {
