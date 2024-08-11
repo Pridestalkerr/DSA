@@ -1,9 +1,7 @@
 import { BSTNode } from "./BSTNode";
 
-export type BSTHeader<T> = BSTNode<T>;
-
 export class BSTreeBase {
-  public static root<T>(header: BSTHeader<T>): BSTNode<T> | undefined {
+  public static root<T, M>(header: BSTNode<T, M>): BSTNode<T, M> | undefined {
     return header.parent;
   }
 
@@ -13,8 +11,8 @@ export class BSTreeBase {
    * @returns [undefined, trail] if the key does not exist, trail is the parent node
    **/
   public static getInsertUniquePosition =
-    <T>(cmp: (a: T, b: T) => number) =>
-    (key: T, header: BSTHeader<T>): [BSTNode<T>, undefined] | [undefined, BSTNode<T>] => {
+    <T, M>(cmp: (a: T, b: T) => number) =>
+    (key: T, header: BSTNode<T, M>): [BSTNode<T, M>, undefined] | [undefined, BSTNode<T, M>] => {
       const root = header.parent;
       let X = root;
       let trail = header;
@@ -36,16 +34,16 @@ export class BSTreeBase {
    * Not yet implemented
    **/
   public static getInsertDuplicatePosition =
-    <T>(cmp: (a: T, b: T) => number) =>
-    (key: T, header: BSTHeader<T>): [BSTNode<T>, undefined] | [undefined, BSTNode<T>] => {
+    <T, M>(cmp: (a: T, b: T) => number) =>
+    (key: T, header: BSTNode<T, M>): [BSTNode<T, M>, undefined] | [undefined, BSTNode<T, M>] => {
       throw new Error("Method not implemented.");
     };
 
   public static lowerBound =
-    <T>(cmp: (a: T, b: T) => number) =>
-    (key: T, header: BSTHeader<T>): BSTNode<T> | undefined => {
+    <T, M>(cmp: (a: T, b: T) => number) =>
+    (key: T, header: BSTNode<T, M>): BSTNode<T, M> | undefined => {
       let X = BSTreeBase.root(header);
-      let bound: BSTNode<T> | undefined = undefined;
+      let bound: BSTNode<T, M> | undefined = undefined;
       while (X !== undefined) {
         const cmpResult = cmp(X.key, key);
         if (cmpResult < 0) {
@@ -61,10 +59,10 @@ export class BSTreeBase {
     };
 
   public static upperBound =
-    <T>(cmp: (a: T, b: T) => number) =>
-    (key: T, header: BSTHeader<T>): BSTNode<T> | undefined => {
+    <T, M>(cmp: (a: T, b: T) => number) =>
+    (key: T, header: BSTNode<T, M>): BSTNode<T, M> | undefined => {
       let X = BSTreeBase.root(header);
-      let bound: BSTNode<T> | undefined = undefined;
+      let bound: BSTNode<T, M> | undefined = undefined;
       while (X !== undefined) {
         const cmpResult = cmp(X.key, key);
         if (cmpResult <= 0) {
@@ -77,12 +75,15 @@ export class BSTreeBase {
       return bound;
     };
 
-  public static insertAtPosition<T>(
+  public static insertAtPosition<T, M>(
     insertLeft: boolean,
-    X: BSTNode<T>,
-    P: BSTNode<T>,
-    header: BSTHeader<T>,
+    X: BSTNode<T, M>,
+    P: BSTNode<T, M>,
+    header: BSTNode<T, M>,
   ) {
+    X.parent = P;
+    X.left = undefined;
+    X.right = undefined;
     if (insertLeft) {
       P.left = X;
       if (P === header) {
@@ -92,17 +93,15 @@ export class BSTreeBase {
       } else if (P === header.left) {
         header.left = X; // maintain the leftmost node
       }
-      X.parent = P;
     } else {
       P.right = X;
       if (P === header.right) {
         header.right = X; // maintain the rightmost node
       }
-      X.parent = P;
     }
   }
 
-  public static eraseNode<T>(Z: BSTNode<T>, header: BSTHeader<T>) {
+  public static eraseNode<T, M>(Z: BSTNode<T, M>, header: BSTNode<T, M>) {
     let Y = Z;
     let X = undefined;
 
@@ -152,13 +151,17 @@ export class BSTreeBase {
       }
     }
 
-    return Z;
+    return X;
   }
 
   // place V's subtree in place of U's subtree, all data is lost in U's subtree
   // can also be used to splice subtrees or nodes by passing undefined as V
-  public static transplant<T>(U: BSTNode<T>, V: BSTNode<T> | undefined, header: BSTHeader<T>) {
-    type Safe = BSTNode<T>;
+  public static transplant<T, M>(
+    U: BSTNode<T, M>,
+    V: BSTNode<T, M> | undefined,
+    header: BSTNode<T, M>,
+  ) {
+    type Safe = BSTNode<T, M>;
     const root = header.parent;
     if (U === root) {
       // set V as the root
@@ -175,5 +178,15 @@ export class BSTreeBase {
       // set V's parent to U's parent
       V.parent = U.parent;
     }
+  }
+
+  public static inOrderTraversal<T, M>(
+    node: BSTNode<T, M> | undefined,
+    callback: (node: BSTNode<T, M>) => void,
+  ) {
+    if (node === undefined) return;
+    BSTreeBase.inOrderTraversal(node.left, callback);
+    callback(node);
+    BSTreeBase.inOrderTraversal(node.right, callback);
   }
 }
