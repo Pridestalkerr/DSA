@@ -106,7 +106,6 @@ function potentialSplit(grid: number[][], start: Point): boolean {
     }
   } else {
     // middle case, check the 2 diagonals
-    console.log("WE SHOULD SEE THIS", start);
     if (grid[start.x + 1]![start.y + 1] === 0 && grid[start.x - 1]![start.y - 1] === 0) return true;
     if (grid[start.x + 1]![start.y - 1] === 0 && grid[start.x - 1]![start.y + 1] === 0) return true;
   }
@@ -114,7 +113,7 @@ function potentialSplit(grid: number[][], start: Point): boolean {
   return false;
 }
 
-const easy = (grid: number[][]): number => {
+export const optBruteforce = (grid: number[][]): number => {
   // 1. check if the grid is already disconnected
   //   - if so, return 0
   // 2. iterate all island cells, and check on how many sides theyre connected
@@ -176,14 +175,34 @@ const easy = (grid: number[][]): number => {
     if (connected === 1) return 1; // we can always break this one
 
     // if theres 3 or more connections, its strongly connected, so it always requires 2 removals
-    if (connected >= 3) continue;
+    // or is an edge, but we'll figure that out eventually
+    if (connected === 3) continue;
 
     // if theres 2 connections, we might be able to do a split on it
     // this case arises when 2 islands are connected by the current one vertically or horizontally
     // there can be multiple of these, so in order to check if we can split, we should perform another flood fill
-    if (connected === 2) {
+    if (connected === 2 || connected === 4) {
       if (potentialSplit(grid, { x: r, y: c })) {
-        if (!canFormLoop(grid, { x: r, y: c })) return 1;
+        console.log("potential split", r, c);
+        // potential split, we run a flood fill again to see if its disconnected
+        const unvisitedLocal = new Set<string>([...islands]);
+        unvisitedLocal.delete(key);
+        const floodFilllocal = (r: number, c: number): void => {
+          if (r < 0 || r >= n || c < 0 || c >= m) return;
+          const key = `${r},${c}`;
+          if (!unvisitedLocal.has(key)) return;
+          unvisitedLocal.delete(key);
+          floodFilllocal(r + 1, c);
+          floodFilllocal(r - 1, c);
+          floodFilllocal(r, c + 1);
+          floodFilllocal(r, c - 1);
+        };
+        const entryPoint = unvisitedLocal.values().next().value.split(",").map(Number) as [
+          number,
+          number,
+        ];
+        floodFilllocal(...entryPoint);
+        if (unvisitedLocal.size !== 0) return 1; // we can split it
       }
     }
   }
@@ -191,7 +210,3 @@ const easy = (grid: number[][]): number => {
   // couldnt find a 1 slice, return 2
   return 2;
 };
-
-export default function minDays(grid: number[][]): number {
-  return easy(grid);
-}
