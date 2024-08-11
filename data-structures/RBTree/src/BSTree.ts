@@ -1,22 +1,23 @@
 import { getDefaultCompare, HasDefaultCompare } from ".";
 import { BSTNode } from "./BSTNode";
-import { BSTHeader, BSTreeBase } from "./BSTreeBase";
+import { BSTreeBase } from "./BSTreeBase";
 
-export class BSTree<T> {
-  protected header: BSTHeader<T> = new BSTNode<T>(undefined as T); // should never call cmp on it
+export class BSTree<T, M = {}> {
+  protected header: BSTNode<T, M>; // should never call cmp on it
   protected get root() {
     return this.header.parent;
   }
   protected cmp: (a: T, b: T) => number;
+  protected newMeta: () => M;
   protected length = 0;
 
-  public _getInsertUniquePosition: ReturnType<typeof BSTreeBase.getInsertUniquePosition<T>>;
-  public _lowerBound: ReturnType<typeof BSTreeBase.lowerBound<T>>;
-  public _upperBound: ReturnType<typeof BSTreeBase.upperBound<T>>;
-  public _insertAtPosition: typeof BSTreeBase.insertAtPosition<T>;
-  public _eraseNode: typeof BSTreeBase.eraseNode<T>;
+  public _getInsertUniquePosition: ReturnType<typeof BSTreeBase.getInsertUniquePosition<T, M>>;
+  public _lowerBound: ReturnType<typeof BSTreeBase.lowerBound<T, M>>;
+  public _upperBound: ReturnType<typeof BSTreeBase.upperBound<T, M>>;
+  public _insertAtPosition: typeof BSTreeBase.insertAtPosition<T, M>;
+  public _eraseNode: typeof BSTreeBase.eraseNode<T, M>;
 
-  constructor({ from, compare, descending }: BSTreeConstructor<T>) {
+  constructor({ from, compare, descending, newMeta }: BSTreeConstructor<T> & { newMeta: () => M }) {
     const hasFrom = from !== undefined;
     const hasValues = hasFrom && from.length > 0;
     const hasCMP = compare !== undefined;
@@ -34,14 +35,18 @@ export class BSTree<T> {
     const sign = descending ? -1 : 1;
     this.cmp = (...args) => sign * _cmp!(...args);
 
-    // 2. Initialize helper functions
-    this._getInsertUniquePosition = BSTreeBase.getInsertUniquePosition<T>(this.cmp);
-    this._lowerBound = BSTreeBase.lowerBound<T>(this.cmp);
-    this._upperBound = BSTreeBase.upperBound<T>(this.cmp);
-    this._insertAtPosition = BSTreeBase.insertAtPosition<T>;
-    this._eraseNode = BSTreeBase.eraseNode<T>;
+    // 2. Initialize header node
+    this.newMeta = newMeta;
+    this.header = new BSTNode(undefined as T, this.newMeta());
 
-    // 3. Populate tree with initial values
+    // 3. Initialize helper functions
+    this._getInsertUniquePosition = BSTreeBase.getInsertUniquePosition<T, M>(this.cmp);
+    this._lowerBound = BSTreeBase.lowerBound<T, M>(this.cmp);
+    this._upperBound = BSTreeBase.upperBound<T, M>(this.cmp);
+    this._insertAtPosition = BSTreeBase.insertAtPosition<T, M>;
+    this._eraseNode = BSTreeBase.eraseNode<T, M>;
+
+    // 4. Populate tree with initial values
     if (hasValues) {
       for (const v of from) {
         this.insertUnique(v);
@@ -55,7 +60,7 @@ export class BSTree<T> {
     return this.length;
   }
 
-  public insertUnique(key: T) {
+  public insertUnique(key: T): BSTNode<T, M> {
     const [X, didInsert] = this._insertUnique(key);
     if (didInsert) {
       this.length++;
@@ -63,13 +68,14 @@ export class BSTree<T> {
     return X;
   }
 
-  public find(key: T) {
+  public find(key: T): BSTNode<T, M> | undefined {
     const X = this.lowerBound(key);
+    // console.log("LOWER BOUND OF: ", key, X);
     if (X === undefined || this.cmp(X.key, key) !== 0) return undefined; // not found
     return X;
   }
 
-  public erase(key: T) {
+  public erase(key: T): BSTNode<T, M> | undefined {
     const X = this.find(key);
     if (X === undefined) return undefined;
     this._eraseNode(X, this.header);
@@ -84,25 +90,29 @@ export class BSTree<T> {
     this.length = 0;
   }
 
+  public inOrderTraversal() {
+    BSTreeBase.inOrderTraversal(this.header.parent, (n) => console.log(n.key));
+  }
+
   // ===============================================
   // ===============mostly private==================
   // ===============================================
 
   public _insertUnique(key: T) {
     const [exists, P] = this.getInsertUniquePosition(key);
-    if (exists) return [exists, false];
+    if (exists) return [exists, false] as const;
 
     let insertLeft = false;
     if (P === this.header || this.cmp(key, P.key) < 0) {
       insertLeft = true;
     }
 
-    const X = new BSTNode<T>(key);
+    const X = new BSTNode(key, this.newMeta());
     this.insertAtPosition(insertLeft, X, P);
-    return [X, true];
+    return [X, true] as const;
   }
 
-  public insertAtPosition(insertLeft: boolean, X: BSTNode<T>, P: BSTNode<T>) {
+  public insertAtPosition(insertLeft: boolean, X: BSTNode<T, M>, P: BSTNode<T, M>) {
     this._insertAtPosition(insertLeft, X, P, this.header);
   }
 
@@ -110,11 +120,11 @@ export class BSTree<T> {
     return this._getInsertUniquePosition(key, this.header);
   }
 
-  public lowerBound(key: T) {
+  public lowerBound(key: T): BSTNode<T, M> | undefined {
     return this._lowerBound(key, this.header);
   }
 
-  public upperBound(key: T) {
+  public upperBound(key: T): BSTNode<T, M> | undefined {
     return this._upperBound(key, this.header);
   }
 }
@@ -144,4 +154,5 @@ export type BSTreeConstructor<T> = (HasDefaultCompare<T> extends true
       compare: (a: T, b: T) => number;
     }) & {
   descending?: boolean;
+  // newMeta: () => M; // meta initializer
 };
