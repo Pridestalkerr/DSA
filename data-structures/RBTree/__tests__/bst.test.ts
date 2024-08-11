@@ -9,7 +9,7 @@ describe("RBTree", () => {
   };
   const objCmp = (a: T, b: T) => a.key - b.key;
   test("INSERT", () => {
-    const t = new BSTree(objCmp);
+    const t = new BSTree({ compare: objCmp, newMeta: () => ({}) });
     t.insertUnique({ key: 1, whatever: "1" });
     t.insertUnique({ key: 2, whatever: "2" });
     t.insertUnique({ key: 3, whatever: "3" });
@@ -19,12 +19,13 @@ describe("RBTree", () => {
     t.insertUnique({ key: 7, whatever: "7" });
     t.insertUnique({ key: 8, whatever: "8" });
     expect(t.size).toBe(8);
+    console.log(t.inOrderTraversal());
     expect(t.find({ key: 1, whatever: "1" })!.key).toStrictEqual({ key: 1, whatever: "1" });
     expect(t.find({ key: 7, whatever: "7" })!.key).toStrictEqual({ key: 7, whatever: "7" });
     expect(t.find({ key: 20, whatever: "20" })).toBeUndefined();
   });
   test("ERASE", () => {
-    const t = new BSTree(objCmp);
+    const t = new BSTree({ compare: objCmp, newMeta: () => ({}) });
     t.insertUnique({ key: 1, whatever: "1" });
     t.insertUnique({ key: 2, whatever: "2" });
     t.insertUnique({ key: 3, whatever: "3" });
@@ -36,7 +37,6 @@ describe("RBTree", () => {
     expect(t.size).toBe(8);
     expect(t.erase({ key: 1, whatever: "1" })!.key).toStrictEqual({ key: 1, whatever: "1" });
     expect(t.size).toBe(7);
-    console.log(t.lowerBound({ key: 1, whatever: "1" }));
     expect(t.find({ key: 1, whatever: "1" })).toBeUndefined();
   });
   //   test("INSERT:Initializer", () => {
@@ -50,7 +50,7 @@ describe("RBTree", () => {
   //       { key: 7, whatever: "7" },
   //       { key: 8, whatever: "8" },
   //     ];
-  //     const t = new rbtree({ from: l, compare: objCmp });
+  //     const t = new rbtree({ from: l, compare: objCmp, newMeta: () => ({}) }); });
   //     expect(t.size).toBe(8);
   //     expect(t.find({ key: 1, whatever: "1" })).toStrictEqual({ key: 1, whatever: "1" });
   //     expect(t.find({ key: 7, whatever: "7" })).toStrictEqual({ key: 7, whatever: "7" });
