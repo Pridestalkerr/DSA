@@ -7,11 +7,6 @@ export namespace BSTUtils {
       this.cmp = cmp;
     }
 
-    /**
-     * @internal Find the expected parent node of the not yet inserted key. To be used for trees with unique keys.
-     * @returns [node, undefined] if the key already exists, node is the existing node
-     * @returns [undefined, trail] if the key does not exist, trail is the parent node
-     **/
     public getInsertUniquePosition = (
       key: T,
       header: BSTNode<T, M>,
@@ -73,11 +68,6 @@ export namespace BSTUtils {
     return header.parent;
   };
 
-  /**
-   * @internal Find the expected parent node of the not yet inserted key. To be used for trees with unique keys.
-   * @returns [node, undefined] if the key already exists, node is the existing node
-   * @returns [undefined, trail] if the key does not exist, trail is the parent node
-   **/
   export const getInsertUniquePosition =
     <T, M>(cmp: (a: T, b: T) => number) =>
     (key: T, header: BSTNode<T, M>): [BSTNode<T, M>, undefined] | [undefined, BSTNode<T, M>] => {
