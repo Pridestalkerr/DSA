@@ -1,4 +1,4 @@
-import { BSTNode } from "./BSTNode";
+import { BSTNode } from "@dsa/bstree";
 
 export const enum Color {
   RED,
@@ -18,35 +18,3 @@ export function isRed<T>(node: RBTreeNode<T>) {
 export function isBlack<T>(node: RBTreeNode<T>) {
   return node.meta.color === Color.BLACK;
 }
-
-// export class RBTreeNode<T> extends BSTNode<
-//   T,
-//   {
-//     color: Color;
-//   }
-// > {
-//   constructor(key: T) {
-//     super(key, { color: Color.RED });
-//   }
-
-//   public isRed() {
-//     return this.meta.color === Color.RED;
-//   }
-
-//   public isBlack() {
-//     return this.meta.color === Color.BLACK;
-//   }
-// }
-
-// class NIL extends RBTreeNode<never> {
-//   constructor() {
-//     super(undefined as never);
-//     this.meta.color = Color.BLACK;
-//     this.left = this;
-//     this.right = this;
-//     this.parent = this;
-//   }
-// }
-
-// export const NILNode = Object.freeze(new NIL());
-// export type NILNode = typeof NILNode;
