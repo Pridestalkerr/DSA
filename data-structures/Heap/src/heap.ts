@@ -9,11 +9,13 @@ export class Heap<T> {
     from,
     compare,
   }: {
-    from: Parameters<typeof Array.from>;
+    from?: Parameters<typeof Array.from>;
     compare: (a: T, b: T) => number;
   }) {
     this.cmp = compare;
-    this.tree = Array.from(from);
+    if (from !== undefined) {
+      this.tree = Array.from(from);
+    }
     this.utils = new HeapUtils.Builder(this.cmp);
   }
 
