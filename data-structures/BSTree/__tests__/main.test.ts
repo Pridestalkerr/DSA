@@ -1,6 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-// import { rbtree } from "../src";
-import { BSTree } from "../src/BSTree";
+import { BSTree } from "../src/tree";
 
 describe("RBTree", () => {
   type T = {
