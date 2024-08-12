@@ -51,6 +51,20 @@ export namespace HeapUtils {
         pos = parent;
       }
     };
+
+    public pushHeap = (tree: T[], value: T) => {
+      tree.push(value);
+      this.heapifyUp(tree, tree.length - 1);
+    };
+
+    public popHeap = (tree: T[]) => {
+      if (tree.length === 0) return undefined;
+      if (tree.length === 1) return tree.pop();
+      const root = tree[0];
+      tree[0] = tree.pop()!;
+      this.heapifyDown(tree, 0);
+      return root;
+    };
   }
 
   export const makeHeap = <T>(tree: T[], cmp: (a: T, b: T) => number) => {
@@ -66,16 +80,10 @@ export namespace HeapUtils {
   };
 
   export const push = <T>(tree: T[], value: T, cmp: (a: T, b: T) => number) => {
-    tree.push(value);
-    new Builder(cmp).heapifyUp(tree, tree.length - 1);
+    return new Builder(cmp).pushHeap(tree, value);
   };
 
   export const pop = <T>(tree: T[], cmp: (a: T, b: T) => number) => {
-    if (tree.length === 0) return undefined;
-    if (tree.length === 1) return tree.pop();
-    const root = tree[0];
-    tree[0] = tree.pop()!;
-    new Builder(cmp).heapifyDown(tree, 0);
-    return root;
+    return new Builder(cmp).popHeap(tree);
   };
 }
