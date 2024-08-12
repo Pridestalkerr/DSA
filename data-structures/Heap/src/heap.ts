@@ -5,17 +5,16 @@ export class Heap<T> {
   protected utils: InstanceType<typeof HeapUtils.Builder<T>>;
   protected cmp: (a: T, b: T) => number;
 
-  constructor({
-    from,
-    compare,
-  }: {
-    from?: Parameters<typeof Array.from>;
-    compare: (a: T, b: T) => number;
-  }) {
+  constructor(
+    {
+      compare,
+    }: {
+      compare: (a: T, b: T) => number;
+    },
+    ...args: Parameters<typeof Array.from<T>>
+  ) {
     this.cmp = compare;
-    if (from !== undefined) {
-      this.tree = Array.from(from);
-    }
+    this.tree = Array.from<T>(...args);
     this.utils = new HeapUtils.Builder(this.cmp);
   }
 

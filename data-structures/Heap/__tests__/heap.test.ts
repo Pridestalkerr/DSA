@@ -8,7 +8,7 @@ describe("RBTree", () => {
   };
   const objCmp = (a: T, b: T) => b.key - a.key;
   test("MINHEAP", () => {
-    const t = new Heap({ compare: objCmp });
+    const t = new Heap({ compare: objCmp }, []);
     t.push({ key: 4, whatever: "4" });
     t.push({ key: 3, whatever: "3" });
     t.push({ key: 8, whatever: "8" });
@@ -23,7 +23,7 @@ describe("RBTree", () => {
     expect(t.size).toBe(6);
   });
   test("MAXHEAP", () => {
-    const t = new Heap({ compare: (a: T, b: T) => -objCmp(a, b) });
+    const t = new Heap({ compare: (a: T, b: T) => -objCmp(a, b) }, []);
     t.push({ key: 4, whatever: "4" });
     t.push({ key: 3, whatever: "3" });
     t.push({ key: 8, whatever: "8" });
