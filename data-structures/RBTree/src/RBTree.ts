@@ -1,9 +1,8 @@
-import { BSTree, BSTreeConstructor } from "./BSTree";
+import { BSTree, type BSTreeConstructor } from "@dsa/bstree";
 import { RBTreeBase } from "./RBTreeBase";
-import { Color, newRBTNode, RBMeta, RBTreeNode } from "./RBTreeNode";
+import { Color, newRBTNode, RBMeta, type RBTreeNode } from "./RBTreeNode";
 
 export class RBTree<T> extends BSTree<T, RBMeta> {
-  // protected header: RBTreeNode<T> = newRBTNode<T>(undefined as T);
   constructor({ from, compare, descending }: BSTreeConstructor<T>) {
     // typescript what the hell is this????
     super({
@@ -22,7 +21,12 @@ export class RBTree<T> extends BSTree<T, RBMeta> {
     return X;
   }
 
-  public __insertUnique(key: T) {
+  public erase(key: T) {
+    const X = this.__erase(key);
+    return X;
+  }
+
+  protected __insertUnique(key: T) {
     const [exists, P] = super.getInsertUniquePosition(key);
     if (exists) return [exists, false] as const;
     let insertLeft = false;
@@ -36,12 +40,12 @@ export class RBTree<T> extends BSTree<T, RBMeta> {
     return [X, true] as const;
   }
 
-  public erase(key: T) {
+  protected __erase(key: T) {
     const Y = this.find(key);
     if (Y === undefined) return undefined;
 
     // X is the node that took the place of Y
-    const X = this._eraseNode(Y, this.header);
+    const X = this.utils.eraseNode(Y, this.header);
     this.length--;
 
     if (Y.meta.color === Color.BLACK) {
@@ -57,6 +61,3 @@ export class RBTree<T> extends BSTree<T, RBMeta> {
     return Y;
   }
 }
-
-const x = new RBTree<number>({ compare: (a, b) => a - b });
-// x.;
