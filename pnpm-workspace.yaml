@@ -3,5 +3,7 @@ packages:
   - packages/config/tsconfig
   - packages/config/prettier
   - packages/config/jest
+  - packages/common
   - algorithms/quicksort
-  - data-structures/
+  - data-structures/*/
+  - LC/*/
