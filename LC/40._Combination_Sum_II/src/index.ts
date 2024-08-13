@@ -7,7 +7,7 @@ const bruteforce = (candidates: number[], target: number): number[][] => {
   const bt = (i: number, arr: number[], currSum: number) => {
     if (currSum === target) {
       // Case 1. sum completed, no need to proceed forward since we have positive integers
-      result.push(arr);
+      result.push(Array.from(arr));
       return;
     }
 
@@ -21,14 +21,16 @@ const bruteforce = (candidates: number[], target: number): number[][] => {
 
     // Case 3.a. include the element, duplicate elements are allowed
     const newSum = currSum + candidates[i]!;
-    bt(i + 1, [...arr, candidates[i]!], newSum);
+    arr.push(candidates[i]!);
+    bt(i + 1, arr, newSum);
+    arr.pop(); // this will backtrack, reducing the array to what was initially given
 
     // Case 3.b. exclude the element
     // we must also exclude all consecutive duplicates
     while (i < n - 1 && candidates[i] === candidates[i + 1]) {
       i++;
     }
-    bt(i + 1, [...arr], currSum);
+    bt(i + 1, arr, currSum);
   };
 
   bt(0, [], 0);
