@@ -25,7 +25,7 @@ export class OrderedMap<K, V> {
 
   constructor(opt: (FromStatic<K, V> | FromArray<K, V>) & Other) {
     let _cmp: CMP.CMP<K>;
-    if (!opt.from !== undefined) {
+    if (opt.from === undefined) {
       // expect compare to be present
       if (opt.compare === undefined) {
         throw new Error("OrderedMap: Either 'from' or 'compare' must be present.");

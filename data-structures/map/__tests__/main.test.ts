@@ -26,5 +26,24 @@ describe("RBTree", () => {
     expect(t.erase({ key: 1, stuff: "1" })).toStrictEqual({ data: "1" });
     expect(t.size()).toBe(7);
     expect(t.find({ key: 1, stuff: "1" })).toBeUndefined();
+    expect(t.find({ key: 2, stuff: "2" })).toStrictEqual({ data: "2" });
+  });
+
+  test("INSERT:defaultKey", () => {
+    const t = new OrderedMap({
+      from: [["first", { data: "1" }]],
+    });
+    t.insert("second", { data: "2" });
+    t.insert("third", { data: "3" });
+    t.insert("fourth", { data: "4" });
+    t.insert("fifth", { data: "5" });
+    t.insert("sixth", { data: "6" });
+    t.insert("seventh", { data: "7" });
+    t.insert("eighth", { data: "8" });
+    expect(t.size()).toBe(8);
+    expect(t.erase("first")).toStrictEqual({ data: "1" });
+    expect(t.size()).toBe(7);
+    expect(t.find("first")).toBeUndefined();
+    expect(t.find("second")).toStrictEqual({ data: "2" });
   });
 });
