@@ -63,6 +63,42 @@ const topDown = (points: number[][]) => {
   return dfs(0, -1);
 };
 
+const bottomUp = (points: number[][]) => {
+  // fun begins here
+  // look at the top down approach, we only care about the previous row
+  // this means we can make do with way less memory and call stacks
+  const n = points.length;
+  const m = points[0]!.length;
+  // pre initialize the first iteration
+  let prevRow = Array.from(points[0]!);
+
+  for (let i = 1; i < n; ++i) {
+    // we go row by row
+    // we have previous values to work with, and we know their column
+    // generating the next row involves finding the best adjusted previous row score
+    // i dont think its doable in place, since theres cases where all the next iteration
+    // would like the same previous column
+
+    let currentRow = new Array(m);
+    for (let j = 0; j < currentRow.length; ++j) {
+      let max = 0;
+      // go over previous scores, choose the best adjusted for current column
+      for (let k = 0; k < m; ++k) {
+        let decr = Math.abs(j - k);
+        let adjustedScore = prevRow[k]! - decr;
+        max = Math.max(max, adjustedScore);
+      }
+      // after max is computed, we add the current score
+      currentRow[j] = points[i]![j]! + max;
+    }
+    // update prevRow
+    prevRow = currentRow;
+  }
+
+  // maximize at the end
+  return Math.max(...prevRow);
+};
+
 export default function maxPoints(points: number[][]): number {
   // fun little problem
   // theres clearly no "greedy" solution, or so youd think
@@ -70,5 +106,8 @@ export default function maxPoints(points: number[][]): number {
   //   return bruteforce(points);
 
   // moving on to a top down approach with memoization
-  return topDown(points);
+  //   return topDown(points);
+
+  // bottom up approach
+  return bottomUp(points);
 }

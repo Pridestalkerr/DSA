@@ -20,5 +20,13 @@ describe("LC/1937._Maximum_Number_of_Points_with_Cost", () => {
     const output = 11;
     expect(fn(points)).toBe(output);
   });
-  // test("T3", () => {});
+  test("T113", () => {
+    const points = [
+      [1, 5],
+      [3, 2],
+      [4, 2],
+    ];
+    const output = 11;
+    expect(fn(points)).toBe(output);
+  });
 });
