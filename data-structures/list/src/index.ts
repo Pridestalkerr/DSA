@@ -82,6 +82,33 @@ export class List<T> {
     this._size++;
   }
 
+  // TODO: make these return
+  public popBack() {
+    if (this.empty()) {
+      return;
+    }
+    this._tail.erase();
+    this._size--;
+  }
+  public popFront() {
+    if (this.empty()) {
+      return;
+    }
+    this._head.erase();
+    this._size--;
+  }
+  public erase(it: ListNodeIterator<T>) {
+    if (it.done || !it.initialised) {
+      return;
+    }
+    it.value.erase();
+    this._size--;
+  }
+
+  [Symbol.iterator]() {
+    return new ListNodeIterator(this._header, this._head);
+  }
+
   private get _head() {
     return this._header.next!;
   }
@@ -96,9 +123,5 @@ export class List<T> {
 
   private set _tail(node: ListNode<T>) {
     this._header.prev = node;
-  }
-
-  [Symbol.iterator]() {
-    return new ListNodeIterator(this._header, this._head);
   }
 }
