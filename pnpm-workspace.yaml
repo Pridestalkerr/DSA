@@ -4,6 +4,6 @@ packages:
   - packages/config/prettier
   - packages/config/jest
   - packages/common
-  - algorithms/quicksort
+  - algorithms/*/
   - data-structures/*/
   - LC/*/

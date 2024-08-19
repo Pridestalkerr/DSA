@@ -65,6 +65,28 @@ importers:
         specifier: ^29.2.4
         version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
 
+  LC/1937._Maximum_Number_of_Points_with_Cost:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
   LC/1985._Find_the_Kth_Largest_Integer_in_the_Array:
     dependencies:
       '@dsa/jest-config':
@@ -115,8 +137,77 @@ importers:
         specifier: ^29.2.4
         version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
 
+  LC/264._Ugly_Number_II:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
   LC/40._Combination_Sum_II:
     dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  LC/624._Maximum_Distance_in_Arrays:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  LC/650._2_Keys_Keyboard:
+    dependencies:
+      '@dsa/factorization':
+        specifier: workspace:^
+        version: link:../../algorithms/factorization
       '@dsa/jest-config':
         specifier: workspace:^
         version: link:../../packages/config/jest
@@ -162,7 +253,51 @@ importers:
         specifier: ^29.2.4
         version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
 
+  LC/719._Find_K-th_Smallest_Pair_Distance:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
   LC/840._Magic_Squares_In_Grid:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  LC/860._Lemonade_Change:
     dependencies:
       '@dsa/jest-config':
         specifier: workspace:^
@@ -250,6 +385,25 @@ importers:
         specifier: ^29.2.4
         version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
 
+  algorithms/factorization:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
   algorithms/quicksort:
     dependencies:
       '@dsa/jest-config':
@@ -315,6 +469,50 @@ importers:
       '@dsa/jest-config':
         specifier: workspace:^
         version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  data-structures/list:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  data-structures/map:
+    dependencies:
+      '@dsa/common':
+        specifier: workspace:^
+        version: link:../../packages/common
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/rbtree':
+        specifier: workspace:^
+        version: link:../RBTree
       '@dsa/tsconfig':
         specifier: workspace:^
         version: link:../../packages/config/tsconfig
