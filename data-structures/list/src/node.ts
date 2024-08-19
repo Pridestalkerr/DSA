@@ -25,4 +25,16 @@ export class ListNode<T> {
     }
     this.next = node;
   }
+
+  public erase() {
+    if (this.prev) {
+      this.prev.next = this.next;
+    }
+    if (this.next) {
+      this.next.prev = this.prev;
+    }
+
+    // leave the node in a consistent state
+    // it makes iterators work even if the node is removed
+  }
 }
