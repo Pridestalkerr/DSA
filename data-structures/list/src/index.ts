@@ -7,9 +7,14 @@ export class List<T> {
   public _header: ListNode<T> = new ListNode<T>(undefined as T);
   protected _size = 0;
 
-  constructor() {
+  constructor(iterable?: Iterable<T>, mapFn?: (value: T) => T) {
     this._head = this._header;
     this._tail = this._header;
+    if (iterable) {
+      for (const elm of iterable) {
+        this.pushBack(mapFn ? mapFn(elm) : elm);
+      }
+    }
   }
 
   // ======================================
