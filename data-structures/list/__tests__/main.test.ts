@@ -95,4 +95,32 @@ describe("List", () => {
     expect(it.done).toBe(true);
     expect(it.value.data).toBe(undefined);
   });
+  test("ERASE", () => {
+    const l = new List<number>();
+    l.pushBack(1);
+    l.pushBack(2);
+    l.pushBack(3);
+    l.pushBack(4);
+    const it = l.begin().next(); // 1
+    it.next(); // 2
+    it.next(); // 3
+    l.erase(it);
+    expect(l.size).toBe(3);
+    expect([...l].map((v) => v.data)).toStrictEqual([1, 2, 4]);
+    expect(it.value.data).toBe(3); // iterator still alive
+    expect(it.next().value.data).toBe(4); // move it
+    l.erase(it); // erase 4
+    expect(l.size).toBe(2);
+    console.log([...l].map((v) => v.data));
+    expect([...l].map((v) => v.data)).toStrictEqual([1, 2]);
+    l.pushBack(3);
+    l.pushBack(4);
+    l.pushBack(5);
+    l.popBack();
+    expect(l.size).toBe(4);
+    expect([...l].map((v) => v.data)).toStrictEqual([1, 2, 3, 4]);
+    l.popFront();
+    expect(l.size).toBe(3);
+    expect([...l].map((v) => v.data)).toStrictEqual([2, 3, 4]);
+  });
 });
