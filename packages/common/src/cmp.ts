@@ -28,4 +28,7 @@ export namespace CMP {
     }
     throw new Error(`No default compare function for type ${typeof val}`);
   };
+
+  export type EQ<T> = (a: T, b: T) => boolean;
+  export const defaultEquals = <T>(a: T, b: T) => a === b;
 }
