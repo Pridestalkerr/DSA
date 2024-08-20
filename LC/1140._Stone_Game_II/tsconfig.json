@@ -1,0 +1,10 @@
+{
+  "extends": "@dsa/tsconfig/base.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "noEmit": false,
+    "outDir": "dist"
+  }
+}
