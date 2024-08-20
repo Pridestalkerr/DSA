@@ -17,8 +17,8 @@ export class Bucket<T> {
   private _MAX_ARRAY_SIZE = 8;
   private _MAX_LIST_SIZE = 32;
 
-  constructor(equals: (a: T, b: T) => boolean) {
-    this._equals = equals;
+  constructor(equals?: (a: T, b: T) => boolean) {
+    this._equals = equals ?? ((a, b) => a === b);
   }
 
   public insert(key: T) {
