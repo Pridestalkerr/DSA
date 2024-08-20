@@ -105,6 +105,7 @@ export class List<T> {
   // ======================================
   public sort(cmp: (a: T, b: T) => number) {
     // TODO: implement list sort
+    // https://en.wikipedia.org/wiki/Merge_sort#Bottom-up_implementation_using_lists
     throw new Error("Method not implemented.");
   }
   // TODO: rest https://en.cppreference.com/w/cpp/container/list
