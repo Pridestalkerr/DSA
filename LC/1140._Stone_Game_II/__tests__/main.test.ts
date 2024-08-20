@@ -12,5 +12,9 @@ describe("LC/1140._Stone_Game_II", () => {
     const result = 104;
     expect(fn(piles)).toEqual(result);
   });
-  test("T3", () => {});
+  test("T91", () => {
+    const piles = [1];
+    const result = 1;
+    expect(fn(piles)).toEqual(result);
+  });
 });
