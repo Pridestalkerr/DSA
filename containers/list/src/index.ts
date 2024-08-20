@@ -109,6 +109,3 @@ export class List<T> {
   }
   // TODO: rest https://en.cppreference.com/w/cpp/container/list
 }
-
-const x = new List<number>();
-x;
