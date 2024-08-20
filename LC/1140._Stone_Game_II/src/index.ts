@@ -38,7 +38,7 @@ const bruteforce = (piles: number[]): number => {
 const topDown = (piles: number[]): number => {
   const n = piles.length;
   // 2d memoization array for i and j in dfs of bruteforce fn
-  const memo = Array.from({ length: n }, () => Array.from({ length: n }, () => -1));
+  const memo = Array.from({ length: n }, () => Array.from({ length: n + 1 }, () => -1));
   // base case where only alice can play, takes care of [1] edge case and other
   memo[n - 1]![1] = piles[n - 1]!;
 
@@ -70,6 +70,38 @@ const topDown = (piles: number[]): number => {
   return (maxScore + dfs(0, 1)) >> 1;
 };
 
+const bottomUp = (piles: number[]): number => {
+  const n = piles.length;
+
+  // Calculate suffix sums
+  const suffixSums = new Array(n + 1).fill(0);
+  for (let i = n - 1; i >= 0; i--) {
+    suffixSums[i] = suffixSums[i + 1] + piles[i];
+  }
+
+  // Initialize dp array
+  const dp = Array.from({ length: n }, () => Array(n + 1).fill(0));
+
+  // Build solution bottom-up
+  for (let i = n - 1; i >= 0; i--) {
+    for (let m = 1; m <= n; m++) {
+      if (i + 2 * m >= n) {
+        // Can take all remaining piles
+        dp[i]![m] = suffixSums[i];
+      } else {
+        // Try all possible K values
+        for (let k = 1; k <= 2 * m; k++) {
+          const score = suffixSums[i] - dp[i + k]![Math.max(m, k)];
+          dp[i]![m] = Math.max(dp[i]![m], score);
+        }
+      }
+    }
+  }
+
+  // The answer is at dp[0][1]
+  return dp[0]![1];
+};
+
 export default function stoneGameII(piles: number[]): number {
   // well, game theory
   // the goal of this problem is to solve the game
@@ -84,5 +116,8 @@ export default function stoneGameII(piles: number[]): number {
   //   return bruteforce(piles);
 
   // negamax bruteforce with memoization
-  return topDown(piles);
+  //   return topDown(piles);
+
+  // bottom up dp
+  return bottomUp(piles);
 }
