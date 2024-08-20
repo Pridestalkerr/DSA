@@ -1,7 +1,7 @@
 import { ListNodeIterator } from "./iterator";
 import { ListNode } from "./node";
 
-export class List<T> {
+export class LinkedList<T> {
   // _header.prev is the first element
   // _header.next is the last element
   public _header: ListNode<T> = new ListNode<T>(undefined as T);
