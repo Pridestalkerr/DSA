@@ -4,7 +4,7 @@ import { ListNode } from "./node";
 export class LinkedList<T> {
   // _header.prev is the first element
   // _header.next is the last element
-  public _header: ListNode<T> = new ListNode<T>(undefined as T);
+  protected _header: ListNode<T> = new ListNode<T>(undefined as T);
   protected _size = 0;
 
   constructor(iterable?: Iterable<T>, mapFn?: (value: T) => T) {
