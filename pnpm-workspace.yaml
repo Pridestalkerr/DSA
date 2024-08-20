@@ -6,4 +6,5 @@ packages:
   - packages/common
   - algorithms/*/
   - data-structures/*/
+  - containers/*/
   - LC/*/
