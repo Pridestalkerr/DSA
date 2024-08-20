@@ -9,6 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@dsa/common": "workspace:^",
     "@dsa/jest-config": "workspace:^",
     "@dsa/tsconfig": "workspace:^"
   },

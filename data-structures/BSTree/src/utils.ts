@@ -1,9 +1,10 @@
+import { CMP } from "@dsa/common";
 import { BSTNode } from "./node";
 
 export namespace BSTUtils {
   export class Builder<T, M> {
-    protected cmp: (a: T, b: T) => number;
-    constructor(cmp: (a: T, b: T) => number) {
+    protected cmp: CMP.CMP<T>;
+    constructor(cmp: CMP.CMP<T>) {
       this.cmp = cmp;
     }
 
@@ -69,19 +70,19 @@ export namespace BSTUtils {
   };
 
   export const getInsertUniquePosition =
-    <T, M>(cmp: (a: T, b: T) => number) =>
+    <T, M>(cmp: CMP.CMP<T>) =>
     (key: T, header: BSTNode<T, M>): [BSTNode<T, M>, undefined] | [undefined, BSTNode<T, M>] => {
       return new BSTUtils.Builder<T, M>(cmp).getInsertUniquePosition(key, header);
     };
 
   export const lowerBound =
-    <T, M>(cmp: (a: T, b: T) => number) =>
+    <T, M>(cmp: CMP.CMP<T>) =>
     (key: T, header: BSTNode<T, M>): BSTNode<T, M> | undefined => {
       return new BSTUtils.Builder<T, M>(cmp).lowerBound(key, header);
     };
 
   export const upperBound =
-    <T, M>(cmp: (a: T, b: T) => number) =>
+    <T, M>(cmp: CMP.CMP<T>) =>
     (key: T, header: BSTNode<T, M>): BSTNode<T, M> | undefined => {
       return new BSTUtils.Builder<T, M>(cmp).upperBound(key, header);
     };

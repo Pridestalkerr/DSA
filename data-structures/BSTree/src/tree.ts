@@ -1,4 +1,4 @@
-import { getDefaultCompare, HasDefaultCompare } from "./cmp";
+import { CMP } from "@dsa/common";
 import { BSTNode } from "./node";
 import { BSTUtils } from "./utils";
 
@@ -7,7 +7,7 @@ export class BSTree<T, M = {}> {
   protected get root() {
     return this.header.parent;
   }
-  protected cmp: (a: T, b: T) => number;
+  protected cmp: CMP.CMP<T>;
   protected newMeta: () => M;
   protected length = 0;
 
@@ -23,7 +23,7 @@ export class BSTree<T, M = {}> {
     if (!hasCMP) {
       // see if we can infer it
       if (hasValues) {
-        _cmp = getDefaultCompare(from[0]);
+        _cmp = CMP.getDefaultCompare(from[0]);
       } else {
         throw new Error("No compare function provided and could not infer one from the array");
       }
@@ -121,29 +121,29 @@ export class BSTree<T, M = {}> {
   }
 }
 
-export type BSTreeConstructor<T> = (HasDefaultCompare<T> extends true
+export type BSTreeConstructor<T> = (CMP.HasDefaultCompare<T> extends true
   ? // compare can be inferred from array values
     // if from is provided, we allow compare to be optional
     // if from is not provided, pass compare
     | {
           // dynamic array provided, could be empty so we cant infer
           from: T[];
-          compare?: (a: T, b: T) => number;
+          compare?: CMP.CMP<T>;
         }
       | {
           // static array initializer provided, we can infer compare
           from: [T, ...T[]];
-          compare?: (a: T, b: T) => number;
+          compare?: CMP.CMP<T>;
         }
       | {
           // if compare is provided, then from can be ommitted
           from?: T[];
-          compare: (a: T, b: T) => number;
+          compare: CMP.CMP<T>;
         }
   : // compare cannot be inferred from array values, force pass compare, allow optional from
     {
       from?: T[];
-      compare: (a: T, b: T) => number;
+      compare: CMP.CMP<T>;
     }) & {
   descending?: boolean;
 };
