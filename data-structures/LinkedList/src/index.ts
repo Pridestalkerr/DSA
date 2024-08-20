@@ -21,11 +21,11 @@ export class LinkedList<T> {
   // ===========ELEMENT ACCESS=============
   // ======================================
   public front() {
-    return this._header.next?.data;
+    return this._header.next;
   }
 
   public back() {
-    return this._header.prev?.data;
+    return this._header.prev;
   }
 
   // ======================================
