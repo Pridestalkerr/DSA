@@ -201,4 +201,54 @@ export namespace BSTUtils {
     callback(node);
     BSTUtils.inOrderTraversal(node.right, callback);
   };
+
+  export const postOrderTraversal = <T, M>(
+    node: BSTNode<T, M> | undefined,
+    callback: (node: BSTNode<T, M>) => void,
+  ) => {
+    if (node === undefined) return;
+    BSTUtils.postOrderTraversal(node.left, callback);
+    BSTUtils.postOrderTraversal(node.right, callback);
+    callback(node);
+  };
+
+  export const preOrderTraversal = <T, M>(
+    node: BSTNode<T, M> | undefined,
+    callback: (node: BSTNode<T, M>) => void,
+  ) => {
+    if (node === undefined) return;
+    callback(node);
+    BSTUtils.preOrderTraversal(node.left, callback);
+    BSTUtils.preOrderTraversal(node.right, callback);
+  };
+
+  export const inorderSuccessor = <T, M>(
+    node: BSTNode<T, M>,
+    header: BSTNode<T, M>,
+  ): BSTNode<T, M> | undefined => {
+    if (node.right !== undefined) {
+      return node.right.minimum();
+    }
+    let parent = node.parent!;
+    while (parent !== header && node === parent.right) {
+      node = parent;
+      parent = parent.parent!;
+    }
+    return parent;
+  };
+
+  export const postorderSuccessor = <T, M>(
+    node: BSTNode<T, M>,
+    header: BSTNode<T, M>,
+  ): BSTNode<T, M> | undefined => {
+    if (node.left !== undefined) {
+      return node.left.maximum();
+    }
+    let parent = node.parent!;
+    while (parent !== header && node === parent.left) {
+      node = parent;
+      parent = parent.parent!;
+    }
+    return parent;
+  };
 }
