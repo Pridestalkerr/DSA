@@ -1,7 +1,7 @@
 import { BSTNode } from "./node";
 import { BSTUtils } from "./utils";
 /**
- * @description Iterator for BSTree (or trees in general).
+ * @description Iterator for BSTree (or binary trees in general).
  * Full traversal is O(n+h) where h is the height of the tree.
  * Next and Prev are O(h) operations at worst (ammortized O(1)).
  */
