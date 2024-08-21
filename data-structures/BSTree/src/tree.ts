@@ -3,7 +3,13 @@ import { BSTNode } from "./node";
 import { BSTUtils } from "./utils";
 
 export class BSTree<T, M = {}> {
-  protected header: BSTNode<T, M>; // should never call cmp on it
+  protected readonly header: BSTNode<T, M>; // should never call cmp on it
+  /**
+   *
+   */
+  public get __header() {
+    return this.header;
+  }
   protected get root() {
     return this.header.parent;
   }
