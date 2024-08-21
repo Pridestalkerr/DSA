@@ -62,4 +62,8 @@ export class BSTreeIterator<T, M = {}> {
     this._current = BSTUtils.postorderSuccessor(this._current, this._header);
     return this;
   }
+
+  [Symbol.iterator]() {
+    return this;
+  }
 }
