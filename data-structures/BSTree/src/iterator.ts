@@ -45,6 +45,12 @@ export class BSTreeIterator<T, M = {}> {
     if (this.done && !this.reverse) {
       throw new Error("BSTreeIterator: cannot move past end");
     }
+    if (this.done) {
+      // it means current node is the header
+      // but we can still iterate apparently
+      this._current = this._header.left!;
+      return this;
+    }
 
     this._current = BSTUtils.inorderSuccessor(this._current, this._header);
     return this;
@@ -57,6 +63,13 @@ export class BSTreeIterator<T, M = {}> {
     }
     if (this.done && this.reverse) {
       throw new Error("BSTreeIterator: cannot move past end");
+    }
+
+    if (this.done) {
+      // it means current node is the header
+      // but we can still iterate apparently
+      this._current = this._header.right!;
+      return this;
     }
 
     this._current = BSTUtils.postorderSuccessor(this._current, this._header);
