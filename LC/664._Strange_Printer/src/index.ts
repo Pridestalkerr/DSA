@@ -48,8 +48,48 @@ const bruteforce = (s: string): number => {
   return dfs(0, n - 1) + 1;
 };
 
+const topDown = (s: string): number => {
+  // lets first remove all consecutive dupes as theyre irrelevant
+  let trimmed = s[0]!;
+  for (const c of s) {
+    if (c !== trimmed![trimmed.length - 1]) {
+      trimmed += c;
+    }
+  }
+  const n = trimmed.length;
+  // small optimization here, left is never smaller than right, so you can save some memory (still N^2 though)
+  const memo = Array.from({ length: n }, () => new Array(n).fill(-1));
+
+  const dfs = (left: number, right: number): number => {
+    if (left >= right) {
+      return 0;
+    }
+    if (memo[left]![right] !== -1) {
+      return memo[left]![right];
+    }
+
+    let best = Infinity;
+    for (let i = left + 1; i <= right; ++i) {
+      const leftRes = dfs(left, i - 1);
+      const rightRes = dfs(i, right);
+      let currRes = leftRes + rightRes;
+      if (trimmed[i] !== trimmed[left]) {
+        currRes++;
+      }
+      best = Math.min(best, currRes);
+    }
+
+    return (memo[left]![right] = best);
+  };
+
+  return dfs(0, n - 1) + 1;
+};
+
 export default function strangePrinter(s: string): number {
   // damn, this is a tough one
   // lets just straight into bruteforce to get an idea of what were dealing with
-  return bruteforce(s); // (TLE)
+  //   return bruteforce(s); // (TLE)
+
+  // lets memo the bruteforce
+  return topDown(s);
 }
