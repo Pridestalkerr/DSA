@@ -222,10 +222,7 @@ export namespace BSTUtils {
     BSTUtils.preOrderTraversal(node.right, callback);
   };
 
-  export const inorderSuccessor = <T, M>(
-    node: BSTNode<T, M>,
-    header: BSTNode<T, M>,
-  ): BSTNode<T, M> | undefined => {
+  export const inorderSuccessor = <T, M>(node: BSTNode<T, M>, header: BSTNode<T, M>) => {
     if (node.right !== undefined) {
       return node.right.minimum();
     }
@@ -237,10 +234,7 @@ export namespace BSTUtils {
     return parent;
   };
 
-  export const postorderSuccessor = <T, M>(
-    node: BSTNode<T, M>,
-    header: BSTNode<T, M>,
-  ): BSTNode<T, M> | undefined => {
+  export const postorderSuccessor = <T, M>(node: BSTNode<T, M>, header: BSTNode<T, M>) => {
     if (node.left !== undefined) {
       return node.left.maximum();
     }
