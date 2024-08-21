@@ -72,4 +72,8 @@ export class ListNodeIterator<T> implements Iterator<ListNode<T>> {
     this._canPrev = this._current !== this._header;
     return this;
   }
+
+  [Symbol.iterator]() {
+    return this;
+  }
 }
