@@ -65,6 +65,20 @@ describe("RBTree", () => {
     expect(it.next().value.key).toStrictEqual({ key: 8, whatever: "8" });
     expect(it.next().done).toBe(true);
     expect(() => it.next()).toThrowError("BSTreeIterator: cannot move past end");
+    expect(it.canPrev).toBe(true);
+    expect(it.canNext).toBe(false);
     expect(it.prev().value.key).toStrictEqual({ key: 8, whatever: "8" });
+    expect(it.prev().prev().prev().prev().prev().prev().value.key).toStrictEqual({
+      key: 2,
+      whatever: "2",
+    });
+    expect(it.prev().value.key).toStrictEqual({ key: 1, whatever: "1" });
+    expect(it.prev().done).toBe(true);
+    expect(() => it.prev()).toThrowError("BSTreeIterator: cannot move past end");
+    expect(it.canNext).toBe(true);
+    expect(it.canPrev).toBe(false);
+    expect(it.next().value.key).toStrictEqual({ key: 1, whatever: "1" });
+    expect(it.canNext).toBe(true);
+    expect(it.canPrev).toBe(true);
   });
 });
