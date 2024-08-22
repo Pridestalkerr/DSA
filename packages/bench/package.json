@@ -1,0 +1,24 @@
+{
+  "name": "@dsa/bench",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@dsa/jest-config": "workspace:^",
+    "@dsa/linkedlist": "workspace:^",
+    "@dsa/tsconfig": "workspace:^",
+    "tinybench": "^2.9.0"
+  },
+  "jest": {
+    "preset": "@dsa/jest-config"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.4"
+  }
+}
