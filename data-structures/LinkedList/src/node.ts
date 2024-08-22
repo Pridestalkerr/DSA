@@ -9,20 +9,20 @@ export class ListNode<T> {
   public insertBefore(node: ListNode<T>) {
     node.prev = this.prev;
     node.next = this;
-    if (this.prev) {
-      // can be removed if circular
-      this.prev.next = node;
-    }
+    // can be removed if circular
+    // if (this.prev) {
+    this.prev!.next = node;
+    // }
     this.prev = node;
   }
 
   public insertAfter(node: ListNode<T>) {
     node.prev = this;
     node.next = this.next;
-    if (this.next) {
-      // can be removed if circular
-      this.next.prev = node;
-    }
+    // can be removed if circular
+    // if (this.next) {
+    this.next!.prev = node;
+    // }
     this.next = node;
   }
 
