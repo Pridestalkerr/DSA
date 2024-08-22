@@ -5,6 +5,9 @@ packages:
   - packages/config/jest
   - packages/common
   - algorithms/*/
+  - algorithms/*/__bench__/
   - data-structures/*/
+  - data-structures/*/__bench__/
   - containers/*/
+  - containers/*/__bench__/
   - LC/*/
