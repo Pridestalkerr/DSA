@@ -79,7 +79,12 @@ export class BenchCase<CK extends string> {
         winnerIdx = bc!.mean < this._cases[key].bench.results[winnerIdx]!.mean ? i : winnerIdx;
       }
       console.log("Winner: ", chalk.greenBright(this._cases[key].bench.tasks[winnerIdx]!.name));
-      console.table(this._cases[key].bench.table());
+      console.table(
+        this._cases[key].bench.table().sort((a, b) => {
+          if (a === null || b === null) return 0;
+          return Number(a["Average Time (ns)"]!) - Number(b["Average Time (ns)"]!);
+        }),
+      );
     }
   }
 
