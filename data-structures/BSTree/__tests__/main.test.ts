@@ -19,7 +19,6 @@ describe("RBTree", () => {
     t.insertUnique({ key: 7, whatever: "7" });
     t.insertUnique({ key: 8, whatever: "8" });
     expect(t.size).toBe(8);
-    console.log(t.inOrderTraversal());
     expect(t.find({ key: 1, whatever: "1" })!.key).toStrictEqual({ key: 1, whatever: "1" });
     expect(t.find({ key: 7, whatever: "7" })!.key).toStrictEqual({ key: 7, whatever: "7" });
     expect(t.find({ key: 20, whatever: "20" })).toBeUndefined();
@@ -54,7 +53,7 @@ describe("RBTree", () => {
     const node = t.find({ key: 4, whatever: "4" });
     expect(node!.key).toStrictEqual({ key: 4, whatever: "4" });
     const it = new BSTreeIterator(t.__header, node!);
-    expect(it.initialised).toBe(false);
+    expect(it.initialized).toBe(false);
     expect(it.done).toBe(false);
     expect(it.next().value.key).toStrictEqual({ key: 4, whatever: "4" });
     expect(it.done).toBe(false);

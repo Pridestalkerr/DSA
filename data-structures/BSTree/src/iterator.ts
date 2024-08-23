@@ -1,15 +1,17 @@
 import { BSTNode } from "./node";
 import { BSTUtils } from "./utils";
+import { type BidirectionalIterator } from "@dsa/interface";
+
 /**
  * @description Iterator for BSTree (or binary trees in general).
  * Full traversal is O(n+h) where h is the height of the tree.
  * Next and Prev are O(h) operations at worst (ammortized O(1)).
  */
-export class BSTreeIterator<T, M = {}> {
+export class BSTreeIterator<T, M = {}> implements BidirectionalIterator<BSTNode<T, M>> {
   private _header: BSTNode<T, M>;
   private _current: BSTNode<T, M>;
   public reverse: boolean;
-  public initialised = false;
+  public initialized = false;
   private _next: () => BSTreeIterator<T, M>;
   private _prev: () => BSTreeIterator<T, M>;
   private _canNext = true;
@@ -48,8 +50,8 @@ export class BSTreeIterator<T, M = {}> {
   }
 
   private _nextImpl() {
-    if (!this.initialised) {
-      this.initialised = true;
+    if (!this.initialized) {
+      this.initialized = true;
       return this;
     }
     if (this.done && !this._canNext) {
@@ -71,8 +73,8 @@ export class BSTreeIterator<T, M = {}> {
   }
 
   private _prevImpl() {
-    if (!this.initialised) {
-      this.initialised = true;
+    if (!this.initialized) {
+      this.initialized = true;
       return this;
     }
     if (this.done && !this._canPrev) {
