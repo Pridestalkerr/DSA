@@ -12,6 +12,7 @@
     "@dsa/jest-config": "workspace:^",
     "@dsa/linkedlist": "workspace:^",
     "@dsa/tsconfig": "workspace:^",
+    "chalk": "^5.3.0",
     "tinybench": "^2.9.0"
   },
   "jest": {
