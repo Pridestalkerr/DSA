@@ -17,7 +17,7 @@ class Case {
   get bench() {
     return this._bench;
   }
-  constructor(description?: string) {
+  constructor() {
     this._ctx = {};
     this._bench = new Bench({ iterations: BenchCase.ITERATIONS });
   }
