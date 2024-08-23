@@ -13,7 +13,7 @@ export function abs(a: u64): u64 {
 }
 
 // Miller-Rabin primality test
-function isPrimeU64(n: u64, iterations: number = 5): boolean {
+export function isPrimeU64(n: u64, iterations: number = 5): boolean {
   if (n < 2n || n % 2n === 0n) return n === 2n;
 
   let s = 0n;
@@ -42,7 +42,7 @@ function isPrimeU64(n: u64, iterations: number = 5): boolean {
 }
 
 // Modular exponentiation
-function modPowU64(base: u64, exponent: u64, modulus: u64): u64 {
+export function modPowU64(base: u64, exponent: u64, modulus: u64): u64 {
   if (modulus === 1n) return 0n;
   let result = 1n;
   base = base % modulus;

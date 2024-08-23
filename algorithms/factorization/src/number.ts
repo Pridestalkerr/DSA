@@ -13,7 +13,7 @@ export function abs(a: number): number {
 }
 
 // Miller-Rabin primality test
-function isPrime(n: number, iterations: number = 5): boolean {
+export function isPrime(n: number, iterations: number = 5): boolean {
   if (n < 2 || n % 2 === 0) return n === 2;
 
   let s = 0;
@@ -42,7 +42,7 @@ function isPrime(n: number, iterations: number = 5): boolean {
 }
 
 // Modular exponentiation
-function modPow(base: number, exponent: number, modulus: number): number {
+export function modPow(base: number, exponent: number, modulus: number): number {
   if (modulus === 1) return 0;
   let result = 1;
   base = base % modulus;
