@@ -4,6 +4,8 @@ packages:
   - packages/config/prettier
   - packages/config/jest
   - packages/common
+  - packages/bench
+  - packages/interface
   - algorithms/*/
   - algorithms/*/__bench__/
   - data-structures/*/
