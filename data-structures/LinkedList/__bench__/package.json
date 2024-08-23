@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "test": "jest",
-    "bench:build": "esbuild --format=esm ./src/index.ts --bundle --outfile=./dist/out.js",
+    "bench:build": "esbuild --format=esm --platform=node ./src/index.ts --bundle --outfile=./dist/out.js",
     "bench:run": "node ./dist/out.js",
     "bench": "pnpm run bench:build && pnpm run bench:run"
   },
