@@ -4,7 +4,7 @@ import { LinkList } from "@js-sdsl/link-list";
 
 const x = new BenchCase("Linked List", ["init", "pushBack"]);
 
-x.setCase("init")
+x.setCase("init", "Initialize from array.")
   .setCtx(() => {
     return {
       arr: Array.from({ length: 10000 }, () => Math.random()),
@@ -22,7 +22,23 @@ x.setCase("init")
       });
   });
 
-const res = await x.run("init");
-console.table(res.table());
-const res2 = await x.run("init");
-console.table(res.table());
+x.setCase("pushBack", "Push 10000 elements on an empty list.")
+  .setCtx(() => {})
+  .setBench((bench, _) => {
+    bench
+      .add("@js-sdsl/link-list", () => {
+        const l = new LinkList<number>();
+        for (let i = 0; i < 10000; i++) {
+          l.pushBack(Math.random());
+        }
+      })
+      .add("@dsa/linkedlist", () => {
+        const l = new LinkedList<number>();
+        for (let i = 0; i < 10000; i++) {
+          l.pushBack(Math.random());
+        }
+      });
+  });
+
+await x.runAll();
+x.log();
