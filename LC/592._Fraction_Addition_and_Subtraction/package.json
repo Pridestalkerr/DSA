@@ -9,6 +9,7 @@
     "build": "esbuild ./src/index.ts --bundle --outfile=./dist/out.js"
   },
   "dependencies": {
+    "@dsa/factorization": "workspace:^",
     "@dsa/jest-config": "workspace:^",
     "@dsa/tsconfig": "workspace:^",
     "esbuild": "^0.23.0"
