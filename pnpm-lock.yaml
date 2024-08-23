@@ -21,6 +21,28 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
 
+  LC/1140._Stone_Game_II:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
   LC/146._LRU_Cache:
     dependencies:
       '@dsa/jest-config':
@@ -181,6 +203,53 @@ importers:
         specifier: ^29.2.4
         version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
 
+  LC/476._Number_Complement:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  LC/592._Fraction_Addition_and_Subtraction:
+    dependencies:
+      '@dsa/factorization':
+        specifier: workspace:^
+        version: link:../../algorithms/factorization
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
   LC/624._Maximum_Distance_in_Arrays:
     dependencies:
       '@dsa/jest-config':
@@ -208,6 +277,28 @@ importers:
       '@dsa/factorization':
         specifier: workspace:^
         version: link:../../algorithms/factorization
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  LC/664._Strange_Printer:
+    dependencies:
       '@dsa/jest-config':
         specifier: workspace:^
         version: link:../../packages/config/jest
@@ -423,11 +514,86 @@ importers:
         specifier: ^29.2.4
         version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
 
-  data-structures/BSTree:
+  containers/list:
     dependencies:
       '@dsa/jest-config':
         specifier: workspace:^
         version: link:../../packages/config/jest
+      '@dsa/linkedlist':
+        specifier: workspace:^
+        version: link:../../data-structures/LinkedList
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  containers/stack:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  data-structures/BSTree:
+    dependencies:
+      '@dsa/common':
+        specifier: workspace:^
+        version: link:../../packages/common
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/config/tsconfig
+    devDependencies:
+      '@dsa/interface':
+        specifier: workspace:^
+        version: link:../../packages/interface
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  data-structures/HashTable:
+    dependencies:
+      '@dsa/common':
+        specifier: workspace:^
+        version: link:../../packages/common
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../packages/config/jest
+      '@dsa/list':
+        specifier: workspace:^
+        version: link:../../containers/list
+      '@dsa/rbtree':
+        specifier: workspace:^
+        version: link:../RBTree
       '@dsa/tsconfig':
         specifier: workspace:^
         version: link:../../packages/config/tsconfig
@@ -461,11 +627,8 @@ importers:
         specifier: ^29.2.4
         version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
 
-  data-structures/RBTree:
+  data-structures/LinkedList:
     dependencies:
-      '@dsa/bstree':
-        specifier: workspace:^
-        version: link:../BSTree
       '@dsa/jest-config':
         specifier: workspace:^
         version: link:../../packages/config/jest
@@ -476,6 +639,9 @@ importers:
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
+      '@js-sdsl/link-list':
+        specifier: ^4.4.2
+        version: 4.4.2
       jest:
         specifier: ^29.7.0
         version: 29.7.0
@@ -483,8 +649,45 @@ importers:
         specifier: ^29.2.4
         version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
 
-  data-structures/list:
+  data-structures/LinkedList/__bench__:
     dependencies:
+      '@dsa/bench':
+        specifier: workspace:^
+        version: link:../../../packages/bench
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../../../packages/config/jest
+      '@dsa/linkedlist':
+        specifier: workspace:^
+        version: link:..
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../../../packages/config/tsconfig
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      '@js-sdsl/link-list':
+        specifier: ^4.4.2
+        version: 4.4.2
+      esbuild:
+        specifier: ^0.23.0
+        version: 0.23.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      tinybench:
+        specifier: ^2.9.0
+        version: 2.9.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  data-structures/RBTree:
+    dependencies:
+      '@dsa/bstree':
+        specifier: workspace:^
+        version: link:../BSTree
       '@dsa/jest-config':
         specifier: workspace:^
         version: link:../../packages/config/jest
@@ -535,6 +738,9 @@ importers:
       '@dsa/jest-config':
         specifier: workspace:^
         version: link:../../packages/config/jest
+      '@dsa/list':
+        specifier: workspace:^
+        version: link:../../containers/list
       '@dsa/rbtree':
         specifier: workspace:^
         version: link:../RBTree
@@ -545,6 +751,31 @@ importers:
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
+
+  packages/bench:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../config/jest
+      '@dsa/linkedlist':
+        specifier: workspace:^
+        version: link:../../data-structures/LinkedList
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../config/tsconfig
+      chalk:
+        specifier: ^5.3.0
+        version: 5.3.0
+      tinybench:
+        specifier: ^2.9.0
+        version: 2.9.0
+    devDependencies:
       jest:
         specifier: ^29.7.0
         version: 29.7.0
@@ -632,6 +863,25 @@ importers:
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
+
+  packages/interface:
+    dependencies:
+      '@dsa/jest-config':
+        specifier: workspace:^
+        version: link:../config/jest
+      '@dsa/tsconfig':
+        specifier: workspace:^
+        version: link:../config/tsconfig
+    devDependencies:
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0
+      ts-jest:
+        specifier: ^29.2.4
+        version: 29.2.4(@babel/core@7.25.2)(esbuild@0.23.0)(jest@29.7.0)(typescript@5.5.4)
 
 packages:
 
@@ -1499,6 +1749,10 @@ packages:
       '@jridgewell/sourcemap-codec': 1.5.0
     dev: true
 
+  /@js-sdsl/link-list@4.4.2:
+    resolution: {integrity: sha512-tL/9WWyOQUBxwZv2Qn2os/CFrue03FwtSZ1S1kq63jJG+JNC3I3jQNYyH8R0asUYqYiChcxjWCpWmISSeYennQ==}
+    dev: true
+
   /@manypkg/cli@0.21.4:
     resolution: {integrity: sha512-EACxxb+c/t6G0l1FrlyewZeBnyR5V1cLkXjnBfsay5TN1UgbilFpG6POglzn+lVJet9NqnEKe3RLHABzkIDZ0Q==}
     engines: {node: '>=14.18.0'}
@@ -2336,6 +2590,11 @@ packages:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
     dev: true
+
+  /chalk@5.3.0:
+    resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+    dev: false
 
   /char-regex@1.0.2:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}
@@ -5685,6 +5944,9 @@ packages:
     dependencies:
       any-promise: 1.3.0
     dev: true
+
+  /tinybench@2.9.0:
+    resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
   /tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
