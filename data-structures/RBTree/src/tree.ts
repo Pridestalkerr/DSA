@@ -1,10 +1,9 @@
 import { BSTree, type BSTreeConstructor } from "@dsa/bstree";
-import { RBTreeBase } from "./RBTreeBase";
-import { Color, newRBTNode, RBMeta, type RBTreeNode } from "./RBTreeNode";
+import { RBTUtils } from "./utils";
+import { Color, newRBTNode, RBMeta } from "./node";
 
 export class RBTree<T> extends BSTree<T, RBMeta> {
   constructor({ from, compare, descending }: BSTreeConstructor<T>) {
-    // typescript what the hell is this????
     super({
       from,
       compare,
@@ -13,10 +12,13 @@ export class RBTree<T> extends BSTree<T, RBMeta> {
     } as BSTreeConstructor<T> & { newMeta: () => RBMeta });
   }
 
+  // ======================================
+  // ==============MODIFIERS===============
+  // ======================================
   public insertUnique(key: T) {
     const [X, didInsert] = this.__insertUnique(key);
     if (didInsert) {
-      this.length++;
+      this.__length++;
     }
     return X;
   }
@@ -26,17 +28,20 @@ export class RBTree<T> extends BSTree<T, RBMeta> {
     return X;
   }
 
+  // ======================================
+  // ===============PRIVATE================
+  // ======================================
   protected __insertUnique(key: T) {
-    const [exists, P] = super.getInsertUniquePosition(key);
+    const [exists, P] = super.__getInsertUniquePosition(key);
     if (exists) return [exists, false] as const;
     let insertLeft = false;
-    if (P === this.header || this.cmp(key, P.key) < 0) {
+    if (P === this.__header || this.__cmp(key, P.key) < 0) {
       insertLeft = true;
     }
     const X = newRBTNode<T>(key);
     X.meta.color = Color.RED;
-    this.insertAtPosition(insertLeft, X, P);
-    RBTreeBase.rebalanceAfterInsert(X, this.header);
+    super.__insertAtPosition(insertLeft, X, P);
+    RBTUtils.rebalanceAfterInsert(X, this.__header);
     return [X, true] as const;
   }
 
@@ -45,16 +50,16 @@ export class RBTree<T> extends BSTree<T, RBMeta> {
     if (Y === undefined) return undefined;
 
     // X is the node that took the place of Y
-    const X = this.utils.eraseNode(Y, this.header);
-    this.length--;
+    const X = this.__utils.eraseNode(Y, this.__header);
+    this.__length--;
 
     if (Y.meta.color === Color.BLACK) {
       // if the deleted node's color was black we need to rebalance
       if (X !== undefined) {
-        RBTreeBase.rebalanceAfterDelete(X, this.header);
+        RBTUtils.rebalanceAfterDelete(X, this.__header);
       } else if (Y.parent !== undefined) {
         // rebalance from parent
-        RBTreeBase.rebalanceAfterDelete(Y.parent, this.header);
+        RBTUtils.rebalanceAfterDelete(Y.parent, this.__header);
       }
     }
 

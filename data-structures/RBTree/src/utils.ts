@@ -1,4 +1,4 @@
-import { RBTreeNode, Color } from "./RBTreeNode";
+import { RBTreeNode, Color } from "./node";
 
 // Header is still a node
 // but all of its links point to the actual root
@@ -6,7 +6,7 @@ import { RBTreeNode, Color } from "./RBTreeNode";
 // we need it because many functions want to set the root itself, but we would lose the reference
 export type Header<T> = RBTreeNode<T>;
 
-export class RBTreeBase {
+export class RBTUtils {
   /**
    *
    * @param X Node to insert
@@ -42,12 +42,12 @@ export class RBTreeBase {
           if (X === P!.right) {
             // Case 2: uncle is BLACK and X is a right child
             X = P;
-            RBTreeBase.rotateLeft(X, header);
+            RBTUtils.rotateLeft(X, header);
           }
           // Case 3: followup of Case 2, uncle is BLACK and X is a left child
           X.parent!.meta.color = Color.BLACK;
           GP.meta.color = Color.RED;
-          RBTreeBase.rotateRight(GP, header);
+          RBTUtils.rotateRight(GP, header);
         }
       } else {
         // parent is a right child (same as above but mirrored)
@@ -62,12 +62,12 @@ export class RBTreeBase {
           if (X === P.left) {
             // Case 2: aunt is BLACK and curr is a right child
             X = P;
-            RBTreeBase.rotateRight(X, header);
+            RBTUtils.rotateRight(X, header);
           }
           // Case 3: followup of Case 2, aunt is BLACK and curr is a left child
           X.parent!.meta.color = Color.BLACK;
           GP.meta.color = Color.RED;
-          RBTreeBase.rotateLeft(GP, header);
+          RBTUtils.rotateLeft(GP, header);
         }
       }
     }
@@ -91,7 +91,7 @@ export class RBTreeBase {
         if (W.meta.color === Color.RED) {
           W.meta.color = Color.BLACK;
           P.meta.color = Color.RED;
-          RBTreeBase.rotateLeft(P, header);
+          RBTUtils.rotateLeft(P, header);
           W = P.right as Safe;
         }
         if (
@@ -109,7 +109,7 @@ export class RBTreeBase {
               W.left.meta.color = Color.BLACK;
             }
             W.meta.color = Color.RED;
-            RBTreeBase.rotateRight(W, header);
+            RBTUtils.rotateRight(W, header);
             W = P.right as Safe;
           }
           W.meta.color = P.meta.color;
@@ -117,7 +117,7 @@ export class RBTreeBase {
           if (W.right !== undefined) {
             W.right.meta.color = Color.BLACK;
           }
-          RBTreeBase.rotateLeft(P, header);
+          RBTUtils.rotateLeft(P, header);
           break;
         }
       } else {
@@ -126,7 +126,7 @@ export class RBTreeBase {
         if (W.meta.color === Color.RED) {
           W.meta.color = Color.BLACK;
           P.meta.color = Color.RED;
-          RBTreeBase.rotateRight(P, header);
+          RBTUtils.rotateRight(P, header);
           W = P.left as Safe;
         }
         if (
@@ -142,7 +142,7 @@ export class RBTreeBase {
               W.right.meta.color = Color.BLACK;
             }
             W.meta.color = Color.RED;
-            RBTreeBase.rotateLeft(W, header);
+            RBTUtils.rotateLeft(W, header);
             W = P.left as Safe;
           }
           W.meta.color = P.meta.color;
@@ -150,7 +150,7 @@ export class RBTreeBase {
           if (W.left !== undefined) {
             W.left.meta.color = Color.BLACK;
           }
-          RBTreeBase.rotateRight(P, header);
+          RBTUtils.rotateRight(P, header);
           break;
         }
       }
