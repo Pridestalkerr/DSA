@@ -10,17 +10,13 @@ export class BSTree<T, M = {}> {
   protected __length = 0;
   protected __utils: InstanceType<typeof BSTUtils.Builder<T, M>>;
 
-  constructor({ from, compare, descending, newMeta }: BSTreeConstructor<T> & { newMeta: () => M }) {
-    const hasFrom = from !== undefined;
-    const hasValues = hasFrom && from.length > 0;
-    const hasCMP = compare !== undefined;
-
+  constructor({ from, compare, descending, newMeta }: CMP.From<T> & { newMeta: () => M }) {
     // 1. Initialize cmp function
     let cmp = compare;
-    if (!hasCMP) {
+    if (cmp === undefined) {
       // see if we can infer it
-      if (hasValues) {
-        cmp = CMP.getDefaultCompare(from[0]);
+      if (from !== undefined) {
+        cmp = CMP.getDefaultCompare(from[Symbol.iterator]().next().value);
       } else {
         throw new Error("No compare function provided and could not infer one from the array");
       }
@@ -39,7 +35,7 @@ export class BSTree<T, M = {}> {
     this.__utils = new BSTUtils.Builder<T, M>(this.__cmp);
 
     // 4. Populate tree with initial values
-    if (hasValues) {
+    if (from !== undefined) {
       for (const v of from) {
         this.insertUnique(v);
       }
@@ -52,15 +48,25 @@ export class BSTree<T, M = {}> {
   // ==============ITERATORS===============
   // ======================================
   public begin() {
-    return new BSTreeIterator(this.__header, this.leftmost);
+    return new BSTreeIterator(this.__header, this.__leftmost);
   }
 
   public rbegin() {
-    return new BSTreeIterator(this.__header, this.rightmost, true);
+    return new BSTreeIterator(this.__header, this.__rightmost, true);
   }
 
   [Symbol.iterator]() {
     return this.begin();
+  }
+
+  public get __root() {
+    return this.__header.parent!;
+  }
+  public get __leftmost() {
+    return this.__header.left!;
+  }
+  public get __rightmost() {
+    return this.__header.right!;
   }
 
   public inOrderTraversal(callback: (node: BSTNode<T, M>) => void = console.log) {
@@ -144,16 +150,6 @@ export class BSTree<T, M = {}> {
   // ======================================
   // ===============PRIVATE================
   // ======================================
-  protected get root() {
-    return this.__header.parent!;
-  }
-  protected get leftmost() {
-    return this.__header.left!;
-  }
-  protected get rightmost() {
-    return this.__header.right!;
-  }
-
   protected __insertUnique(key: T) {
     const [exists, P] = this.__getInsertUniquePosition(key);
     if (exists) return [exists, false] as const;
@@ -176,30 +172,3 @@ export class BSTree<T, M = {}> {
     return this.__utils.getInsertUniquePosition(key, this.__header);
   }
 }
-
-export type BSTreeConstructor<T> = (CMP.HasDefaultCompare<T> extends true
-  ? // compare can be inferred from array values
-    // if from is provided, we allow compare to be optional
-    // if from is not provided, pass compare
-    | {
-          // dynamic array provided, could be empty so we cant infer
-          from: T[];
-          compare?: CMP.CMP<T>;
-        }
-      | {
-          // static array initializer provided, we can infer compare
-          from: [T, ...T[]];
-          compare?: CMP.CMP<T>;
-        }
-      | {
-          // if compare is provided, then from can be ommitted
-          from?: T[];
-          compare: CMP.CMP<T>;
-        }
-  : // compare cannot be inferred from array values, force pass compare, allow optional from
-    {
-      from?: T[];
-      compare: CMP.CMP<T>;
-    }) & {
-  descending?: boolean;
-};
