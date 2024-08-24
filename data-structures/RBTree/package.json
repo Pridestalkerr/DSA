@@ -17,6 +17,7 @@
     "preset": "@dsa/jest-config"
   },
   "devDependencies": {
+    "@dsa/common": "workspace:^",
     "@jest/globals": "^29.7.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.4"
