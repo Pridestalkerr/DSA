@@ -2,14 +2,14 @@ import { ListNodeIterator } from "./iterator";
 import { ListNode } from "./node";
 
 export class LinkedList<T> {
-  // _header.prev is the first element
-  // _header.next is the last element
-  protected _header: ListNode<T> = new ListNode<T>(undefined as T);
-  protected _size = 0;
+  // __header.prev is the first element
+  // __header.next is the last element
+  protected __header: ListNode<T> = new ListNode<T>(undefined as T);
+  protected __size = 0;
 
   constructor(iterable?: Iterable<T>, mapFn?: (value: T) => T) {
-    this._head = this._header;
-    this._tail = this._header;
+    this.__head = this.__header;
+    this.__tail = this.__header;
     if (iterable) {
       for (const elm of iterable) {
         this.pushBack(mapFn ? mapFn(elm) : elm);
@@ -21,22 +21,26 @@ export class LinkedList<T> {
   // ===========ELEMENT ACCESS=============
   // ======================================
   public front() {
-    return this._header.next;
+    return this.__header.next;
   }
 
   public back() {
-    return this._header.prev;
+    return this.__header.prev;
   }
 
   // ======================================
   // ==============ITERATORS===============
   // ======================================
   public begin() {
-    return new ListNodeIterator(this._header, this._head);
+    return new ListNodeIterator(this.__header, this.__head);
   }
 
   public rbegin() {
-    return new ListNodeIterator(this._header, this._tail, true);
+    return new ListNodeIterator(this.__header, this.__tail, true);
+  }
+
+  [Symbol.iterator]() {
+    return this.begin();
   }
 
   // ======================================
@@ -47,44 +51,44 @@ export class LinkedList<T> {
   }
 
   public get size() {
-    return this._size;
+    return this.__size;
   }
 
   public get length() {
-    return this.size;
+    return this.__size;
   }
 
   // ======================================
   // ==============MODIFIERS===============
   // ======================================
   public clear() {
-    this._head = this._header;
-    this._tail = this._header;
-    this._size = 0;
+    this.__head = this.__header;
+    this.__tail = this.__header;
+    this.__size = 0;
   }
 
   public pushBack(data: T) {
     const node = new ListNode(data);
-    this._header.insertBefore(node);
-    this._size++;
+    this.__header.insertBefore(node);
+    this.__size++;
   }
 
   public pushFront(data: T) {
     const node = new ListNode(data);
-    this._header.insertAfter(node);
-    this._size++;
+    this.__header.insertAfter(node);
+    this.__size++;
   }
 
   public insertBefore(it: ListNodeIterator<T>, data: T) {
     const node = new ListNode(data);
     it.value.insertBefore(node);
-    this._size++;
+    this.__size++;
   }
 
   public insertAfter(it: ListNodeIterator<T>, data: T) {
     const node = new ListNode(data);
     it.value.insertAfter(node);
-    this._size++;
+    this.__size++;
   }
 
   // TODO: make these return
@@ -92,41 +96,37 @@ export class LinkedList<T> {
     if (this.empty()) {
       return;
     }
-    this._tail.erase();
-    this._size--;
+    this.__tail.erase();
+    this.__size--;
   }
   public popFront() {
     if (this.empty()) {
       return;
     }
-    this._head.erase();
-    this._size--;
+    this.__head.erase();
+    this.__size--;
   }
   public erase(it: ListNodeIterator<T>) {
     if (it.done || !it.initialised) {
       return;
     }
     it.value.erase();
-    this._size--;
+    this.__size--;
   }
 
-  [Symbol.iterator]() {
-    return new ListNodeIterator(this._header, this._head);
+  protected get __head() {
+    return this.__header.next!;
   }
 
-  private get _head() {
-    return this._header.next!;
+  protected set __head(node: ListNode<T>) {
+    this.__header.next = node;
   }
 
-  private set _head(node: ListNode<T>) {
-    this._header.next = node;
+  protected get __tail() {
+    return this.__header.prev!;
   }
 
-  private get _tail() {
-    return this._header.prev!;
-  }
-
-  private set _tail(node: ListNode<T>) {
-    this._header.prev = node;
+  protected set __tail(node: ListNode<T>) {
+    this.__header.prev = node;
   }
 }
