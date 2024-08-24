@@ -63,6 +63,10 @@ export namespace BSTUtils {
     public eraseNode = BSTUtils.eraseNode;
     public transplant = BSTUtils.transplant;
     public inOrderTraversal = BSTUtils.inOrderTraversal;
+    public postOrderTraversal = BSTUtils.postOrderTraversal;
+    public preOrderTraversal = BSTUtils.preOrderTraversal;
+    public inorderSuccessor = BSTUtils.inorderSuccessor;
+    public postorderSuccessor = BSTUtils.postorderSuccessor;
   }
 
   export const root = <T, M>(header: BSTNode<T, M>): BSTNode<T, M> | undefined => {
