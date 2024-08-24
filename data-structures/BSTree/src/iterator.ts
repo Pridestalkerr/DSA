@@ -8,94 +8,107 @@ import { type BidirectionalIterator } from "@dsa/interface";
  * Next and Prev are O(h) operations at worst (ammortized O(1)).
  */
 export class BSTreeIterator<T, M = {}> implements BidirectionalIterator<BSTNode<T, M>> {
-  private _header: BSTNode<T, M>;
-  private _current: BSTNode<T, M>;
-  public reverse: boolean;
-  public initialized = false;
-  private _next: () => BSTreeIterator<T, M>;
-  private _prev: () => BSTreeIterator<T, M>;
-  private _canNext = true;
-  private _canPrev = true;
+  protected __header: BSTNode<T, M>;
+  protected __current: BSTNode<T, M>;
+  protected __reverse: boolean;
+  protected __initialized = false;
+  protected __canNext = true;
+  protected __canPrev = true;
+  protected __next: () => BSTreeIterator<T, M>;
+  protected __prev: () => BSTreeIterator<T, M>;
+
+  constructor(header: BSTNode<T, M>, node: BSTNode<T, M>, reverse = false) {
+    this.__header = header;
+    this.__current = node;
+    this.__reverse = reverse;
+    this.__next = reverse ? this.__prevImpl : this.__nextImpl;
+    this.__prev = reverse ? this.__nextImpl : this.__prevImpl;
+  }
+
+  // ======================================
+  // ==============GETTERS=================
+  // ======================================
+  public get value() {
+    return this.__current as BSTNode<T, M>;
+  }
+
+  public get reverse() {
+    return this.__reverse;
+  }
+
+  public get initialized() {
+    return this.__initialized;
+  }
 
   public get canNext() {
-    return this._canNext;
+    return this.__canNext;
   }
 
   public get canPrev() {
-    return this._canPrev;
-  }
-
-  constructor(header: BSTNode<T, M>, node: BSTNode<T, M>, reverse = false) {
-    this._header = header;
-    this._current = node;
-    this.reverse = reverse;
-    this._next = reverse ? this._prevImpl : this._nextImpl;
-    this._prev = reverse ? this._nextImpl : this._prevImpl;
+    return this.__canPrev;
   }
 
   public get done() {
-    return this._current === this._header;
+    return this.__current === this.__header;
   }
 
-  public get value() {
-    return this._current as BSTNode<T, M>;
-  }
-
+  // ======================================
+  // ==============STEPPER=================
+  // ======================================
   public next() {
-    return this._next();
+    return this.__next();
   }
 
   public prev() {
-    return this._prev();
-  }
-
-  private _nextImpl() {
-    if (!this.initialized) {
-      this.initialized = true;
-      return this;
-    }
-    if (this.done && !this._canNext) {
-      throw new Error("BSTreeIterator: cannot move past end");
-    }
-
-    this._canPrev = true;
-
-    if (this.done) {
-      // it means current node is the header
-      // but we can still iterate apparently
-      this._current = this._header.left!;
-      return this;
-    }
-
-    this._current = BSTUtils.inorderSuccessor(this._current, this._header);
-    this._canNext = this._current !== this._header;
-    return this;
-  }
-
-  private _prevImpl() {
-    if (!this.initialized) {
-      this.initialized = true;
-      return this;
-    }
-    if (this.done && !this._canPrev) {
-      throw new Error("BSTreeIterator: cannot move past end");
-    }
-
-    this._canNext = true;
-
-    if (this.done) {
-      // it means current node is the header
-      // but we can still iterate apparently
-      this._current = this._header.right!;
-      return this;
-    }
-
-    this._current = BSTUtils.postorderSuccessor(this._current, this._header);
-    this._canPrev = this._current !== this._header;
-    return this;
+    return this.__prev();
   }
 
   [Symbol.iterator]() {
+    return this;
+  }
+
+  // ======================================
+  // ==============PRIVATE=================
+  // ======================================
+  protected __nextImpl() {
+    if (!this.__initialized) {
+      this.__initialized = true;
+      return this;
+    }
+    if (this.done && !this.__canNext) {
+      throw new Error("BSTreeIterator: cannot move past end");
+    }
+
+    this.__canPrev = true;
+
+    if (this.done) {
+      this.__current = this.__header.left!;
+      return this;
+    }
+
+    this.__current = BSTUtils.inorderSuccessor(this.__current, this.__header);
+    this.__canNext = this.__current !== this.__header;
+    return this;
+  }
+
+  protected __prevImpl() {
+    if (!this.__initialized) {
+      this.__initialized = true;
+      return this;
+    }
+    if (this.done && !this.__canPrev) {
+      throw new Error("BSTreeIterator: cannot move past end");
+    }
+
+    this.__canNext = true;
+
+    if (this.done) {
+      this.__current = this.__header.right!;
+      return this;
+    }
+
+    this.__current = BSTUtils.postorderSuccessor(this.__current, this.__header);
+    this.__canPrev = this.__current !== this.__header;
     return this;
   }
 }
