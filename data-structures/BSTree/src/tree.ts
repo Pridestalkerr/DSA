@@ -1,23 +1,14 @@
 import { CMP } from "@dsa/common";
 import { BSTNode } from "./node";
 import { BSTUtils } from "./utils";
+import { BSTreeIterator } from "./iterator";
 
 export class BSTree<T, M = {}> {
-  protected readonly header: BSTNode<T, M>; // should never call cmp on it
-  /**
-   *
-   */
-  public get __header() {
-    return this.header;
-  }
-  protected get root() {
-    return this.header.parent;
-  }
-  protected cmp: CMP.CMP<T>;
-  protected newMeta: () => M;
-  protected length = 0;
-
-  protected utils: InstanceType<typeof BSTUtils.Builder<T, M>>;
+  public readonly __header: BSTNode<T, M>; // should never call cmp on it
+  protected __cmp: CMP.CMP<T>;
+  protected __newMeta: () => M;
+  protected __length = 0;
+  protected __utils: InstanceType<typeof BSTUtils.Builder<T, M>>;
 
   constructor({ from, compare, descending, newMeta }: BSTreeConstructor<T> & { newMeta: () => M }) {
     const hasFrom = from !== undefined;
@@ -25,24 +16,27 @@ export class BSTree<T, M = {}> {
     const hasCMP = compare !== undefined;
 
     // 1. Initialize cmp function
-    let _cmp = compare;
+    let cmp = compare;
     if (!hasCMP) {
       // see if we can infer it
       if (hasValues) {
-        _cmp = CMP.getDefaultCompare(from[0]);
+        cmp = CMP.getDefaultCompare(from[0]);
       } else {
         throw new Error("No compare function provided and could not infer one from the array");
       }
     }
     const sign = descending ? -1 : 1;
-    this.cmp = (...args) => sign * _cmp!(...args);
+    this.__cmp = (...args) => sign * cmp!(...args);
 
     // 2. Initialize header node
-    this.newMeta = newMeta;
-    this.header = new BSTNode(undefined as T, this.newMeta());
+    this.__newMeta = newMeta;
+    this.__header = new BSTNode(undefined as T, this.__newMeta());
+    // this.__header.parent = this.__header;
+    // this.__header.left = this.__header;
+    // this.__header.right = this.__header;
 
     // 3. Initialize utils
-    this.utils = new BSTUtils.Builder<T, M>(this.cmp);
+    this.__utils = new BSTUtils.Builder<T, M>(this.__cmp);
 
     // 4. Populate tree with initial values
     if (hasValues) {
@@ -54,76 +48,132 @@ export class BSTree<T, M = {}> {
     return this;
   }
 
+  // ======================================
+  // ==============ITERATORS===============
+  // ======================================
+  public begin() {
+    return new BSTreeIterator(this.__header, this.leftmost);
+  }
+
+  public rbegin() {
+    return new BSTreeIterator(this.__header, this.rightmost, true);
+  }
+
+  [Symbol.iterator]() {
+    return this.begin();
+  }
+
+  public inOrderTraversal(callback: (node: BSTNode<T, M>) => void = console.log) {
+    this.__utils.inOrderTraversal(this.__header.parent, (n) => callback(n));
+  }
+
+  public preOrderTraversal(callback: (node: BSTNode<T, M>) => void = console.log) {
+    this.__utils.preOrderTraversal(this.__header.parent, (n) => callback(n));
+  }
+
+  // ======================================
+  // ==============CAPACITY================
+  // ======================================
+  public empty() {
+    return this.__length === 0;
+  }
+
   get size() {
-    return this.length;
+    return this.__length;
+  }
+
+  get length() {
+    return this.__length;
+  }
+
+  // ======================================
+  // ==============MODIFIERS===============
+  // ======================================
+  public clear() {
+    this.__header.parent = undefined;
+    this.__header.left = undefined;
+    this.__header.right = undefined;
+    this.__length = 0;
   }
 
   public insertUnique(key: T): BSTNode<T, M> {
-    const [X, didInsert] = this._insertUnique(key);
+    const [X, didInsert] = this.__insertUnique(key);
     if (didInsert) {
-      this.length++;
+      this.__length++;
     }
-    return X;
-  }
-
-  public find(key: T): BSTNode<T, M> | undefined {
-    const X = this.lowerBound(key);
-    // console.log("LOWER BOUND OF: ", key, X);
-    if (X === undefined || this.cmp(X.key, key) !== 0) return undefined; // not found
     return X;
   }
 
   public erase(key: T): BSTNode<T, M> | undefined {
     const X = this.find(key);
     if (X === undefined) return undefined;
-    this.utils.eraseNode(X, this.header);
-    this.length--;
+    this.__utils.eraseNode(X, this.__header);
+    this.__length--;
     return X;
   }
 
-  public clear() {
-    this.header.parent = undefined;
-    this.header.left = undefined;
-    this.header.right = undefined;
-    this.length = 0;
+  // ======================================
+  // ===============LOOKUP=================
+  // ======================================
+  public find(key: T): BSTNode<T, M> | undefined {
+    const X = this.lowerBound(key);
+    if (X === undefined || this.__cmp(X.key, key) !== 0) return undefined; // not found
+    return X;
   }
 
-  public inOrderTraversal() {
-    this.utils.inOrderTraversal(this.header.parent, (n) => console.log(n.key));
-  }
-
-  // ===============================================
-  // ===============mostly private==================
-  // ===============================================
-
-  public _insertUnique(key: T) {
-    const [exists, P] = this.getInsertUniquePosition(key);
-    if (exists) return [exists, false] as const;
-
-    let insertLeft = false;
-    if (P === this.header || this.cmp(key, P.key) < 0) {
-      insertLeft = true;
-    }
-
-    const X = new BSTNode(key, this.newMeta());
-    this.insertAtPosition(insertLeft, X, P);
-    return [X, true] as const;
-  }
-
-  public insertAtPosition(insertLeft: boolean, X: BSTNode<T, M>, P: BSTNode<T, M>) {
-    this.utils.insertAtPosition(insertLeft, X, P, this.header);
-  }
-
-  public getInsertUniquePosition(key: T) {
-    return this.utils.getInsertUniquePosition(key, this.header);
+  public contains(key: T) {
+    return this.find(key) !== undefined;
   }
 
   public lowerBound(key: T): BSTNode<T, M> | undefined {
-    return this.utils.lowerBound(key, this.header);
+    return this.__utils.lowerBound(key, this.__header);
   }
 
   public upperBound(key: T): BSTNode<T, M> | undefined {
-    return this.utils.upperBound(key, this.header);
+    return this.__utils.upperBound(key, this.__header);
+  }
+
+  public inorderSuccessor(node: BSTNode<T, M>): BSTNode<T, M> | undefined {
+    return this.__utils.inorderSuccessor(node, this.__header);
+  }
+
+  public postorderSuccessor(node: BSTNode<T, M>): BSTNode<T, M> | undefined {
+    return this.__utils.postorderSuccessor(node, this.__header);
+  }
+
+  // ======================================
+  // ===============PRIVATE================
+  // ======================================
+  protected get root() {
+    return this.__header.parent!;
+  }
+  protected get leftmost() {
+    return this.__header.left!;
+  }
+  protected get rightmost() {
+    return this.__header.right!;
+  }
+
+  protected __insertUnique(key: T) {
+    const [exists, P] = this.__getInsertUniquePosition(key);
+    if (exists) return [exists, false] as const;
+
+    let insertLeft = false;
+    if (P === this.__header || this.__cmp(key, P.key) < 0) {
+      insertLeft = true;
+    }
+
+    const X = new BSTNode(key, this.__newMeta());
+    this.__insertAtPosition(insertLeft, X, P);
+    return [X, true] as const;
+  }
+
+  protected __insertAtPosition(insertLeft: boolean, X: BSTNode<T, M>, P: BSTNode<T, M>) {
+    this.__utils.insertAtPosition(insertLeft, X, P, this.__header);
+  }
+
+  protected __getInsertUniquePosition(key: T) {
+    return this.__utils.getInsertUniquePosition(key, this.__header);
   }
 }
 
