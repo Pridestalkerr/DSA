@@ -1,15 +1,17 @@
-import { BSTree, type BSTreeConstructor } from "@dsa/bstree";
+import { BSTree } from "@dsa/bstree";
 import { RBTUtils } from "./utils";
 import { Color, newRBTNode, RBMeta } from "./node";
+import { type CMP } from "@dsa/common";
 
 export class RBTree<T> extends BSTree<T, RBMeta> {
-  constructor({ from, compare, descending }: BSTreeConstructor<T>) {
+  constructor({ from, compare, descending }: CMP.From<T>) {
     super({
       from,
       compare,
       descending,
-      newMeta: () => ({ color: Color.RED }),
-    } as BSTreeConstructor<T> & { newMeta: () => RBMeta });
+      newMeta: () => ({ color: Color.RED }) as RBMeta,
+      // TODO: i guess i dont understand typescript
+    } as CMP.From<T> & { newMeta: () => RBMeta });
   }
 
   // ======================================
