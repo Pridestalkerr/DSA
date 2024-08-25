@@ -66,7 +66,7 @@ export namespace BSTUtils {
     public postOrderTraversal = BSTUtils.postOrderTraversal;
     public preOrderTraversal = BSTUtils.preOrderTraversal;
     public inorderSuccessor = BSTUtils.inorderSuccessor;
-    public postorderSuccessor = BSTUtils.postorderSuccessor;
+    public inorderPredecessor = BSTUtils.inorderPredecessor;
   }
 
   export const root = <T, M>(header: BSTNode<T, M>): BSTNode<T, M> | undefined => {
@@ -238,7 +238,7 @@ export namespace BSTUtils {
     return parent;
   };
 
-  export const postorderSuccessor = <T, M>(node: BSTNode<T, M>, header: BSTNode<T, M>) => {
+  export const inorderPredecessor = <T, M>(node: BSTNode<T, M>, header: BSTNode<T, M>) => {
     if (node.left !== undefined) {
       return node.left.maximum();
     }

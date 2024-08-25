@@ -143,8 +143,8 @@ export class BSTree<T, M = {}> {
     return this.__utils.inorderSuccessor(node, this.__header);
   }
 
-  public postorderSuccessor(node: BSTNode<T, M>): BSTNode<T, M> | undefined {
-    return this.__utils.postorderSuccessor(node, this.__header);
+  public inorderPredecessor(node: BSTNode<T, M>): BSTNode<T, M> | undefined {
+    return this.__utils.inorderPredecessor(node, this.__header);
   }
 
   // ======================================

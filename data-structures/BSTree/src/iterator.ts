@@ -107,7 +107,7 @@ export class BSTreeIterator<T, M = {}> implements BidirectionalIterator<BSTNode<
       return this;
     }
 
-    this.__current = BSTUtils.postorderSuccessor(this.__current, this.__header);
+    this.__current = BSTUtils.inorderPredecessor(this.__current, this.__header);
     this.__canPrev = this.__current !== this.__header;
     return this;
   }
