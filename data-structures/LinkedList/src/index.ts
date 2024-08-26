@@ -1,4 +1,4 @@
-import { ListNodeIterator } from "./iterator";
+import { ListNodeBidirectionalIterator, ListNodeIterator } from "./iterator";
 import { ListNode } from "./node";
 
 export class LinkedList<T> {
@@ -37,6 +37,15 @@ export class LinkedList<T> {
 
   public rbegin() {
     return new ListNodeIterator(this.__header, this.__tail, true);
+  }
+
+  // TODO: better naming
+  public beginBidirectional() {
+    return new ListNodeBidirectionalIterator(this.__header, this.__head);
+  }
+
+  public rbeginBidirectional() {
+    return new ListNodeBidirectionalIterator(this.__header, this.__tail, true);
   }
 
   [Symbol.iterator]() {
@@ -79,13 +88,13 @@ export class LinkedList<T> {
     this.__size++;
   }
 
-  public insertBefore(it: ListNodeIterator<T>, data: T) {
+  public insertBefore(it: ListNodeIterator<T> | ListNodeBidirectionalIterator<T>, data: T) {
     const node = new ListNode(data);
     it.value.insertBefore(node);
     this.__size++;
   }
 
-  public insertAfter(it: ListNodeIterator<T>, data: T) {
+  public insertAfter(it: ListNodeIterator<T> | ListNodeBidirectionalIterator<T>, data: T) {
     const node = new ListNode(data);
     it.value.insertAfter(node);
     this.__size++;
@@ -106,8 +115,8 @@ export class LinkedList<T> {
     this.__head.erase();
     this.__size--;
   }
-  public erase(it: ListNodeIterator<T>) {
-    if (it.done || !it.initialised) {
+  public erase(it: ListNodeIterator<T> | ListNodeBidirectionalIterator<T>) {
+    if (it.done) {
       return;
     }
     it.value.erase();

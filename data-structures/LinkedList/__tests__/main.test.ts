@@ -34,7 +34,7 @@ describe("LinkedList", () => {
     l.pushBack(2);
     l.pushBack(3);
     l.pushBack(4);
-    const it = l.begin().next();
+    const it = l.beginBidirectional().next();
     l.insertBefore(it, 0.5);
     expect(l.size).toBe(5);
     expect([...l].map((v) => v.data)).toStrictEqual([0.5, 1, 2, 3, 4]);
@@ -101,7 +101,7 @@ describe("LinkedList", () => {
     l.pushBack(2);
     l.pushBack(3);
     l.pushBack(4);
-    const it = l.begin();
+    const it = l.beginBidirectional();
     expect(it.canNext).toBe(true);
     expect(it.canPrev).toBe(true);
     it.next();
@@ -150,7 +150,6 @@ describe("LinkedList", () => {
     expect(it.next().value.data).toBe(4); // move it
     l.erase(it); // erase 4
     expect(l.size).toBe(2);
-    console.log([...l].map((v) => v.data));
     expect([...l].map((v) => v.data)).toStrictEqual([1, 2]);
     l.pushBack(3);
     l.pushBack(4);

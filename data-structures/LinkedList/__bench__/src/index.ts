@@ -2,7 +2,7 @@ import { BenchCase } from "@dsa/bench";
 import { LinkedList } from "@dsa/linkedlist";
 import { LinkList } from "@js-sdsl/link-list";
 
-const x = new BenchCase("Linked List", ["init", "pushBack", "pushFront"]);
+const x = new BenchCase("Linked List", ["init", "begin", "pushBack", "pushFront"]);
 
 x.setCase("init", "Initialize from array.")
   .setCtx(() => {
@@ -22,6 +22,34 @@ x.setCase("init", "Initialize from array.")
       })
       .add("Array", () => {
         const tmp = Array.from(ctx.arr);
+      });
+  });
+
+x.setCase("begin", "Traverse 10000 elements in forward direction.")
+  .setCtx(() => {
+    const arr = Array.from({ length: 10000 }, () => Math.random());
+    return {
+      arr: arr,
+      l1: new LinkedList<number>(arr),
+      l2: new LinkList<number>(arr),
+    };
+  })
+  .setBench((bench, ctx) => {
+    bench
+      .add("@js-sdsl/link-list", () => {
+        for (const it of ctx.l2) {
+          it;
+        }
+      })
+      .add("@dsa/linkedlist", () => {
+        for (const it of ctx.l1) {
+          it;
+        }
+      })
+      .add("Array", () => {
+        for (const it of ctx.arr) {
+          it;
+        }
       });
   });
 
