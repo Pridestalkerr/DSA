@@ -4,7 +4,7 @@ import fn from "../src/index";
 describe("LC/1514._Path_with_Maximum_Probability", () => {
   test("T1", () => {
     const n = 3;
-    const edges = [
+    const edges: [number, number][] = [
       [0, 1],
       [1, 2],
       [0, 2],
@@ -17,7 +17,7 @@ describe("LC/1514._Path_with_Maximum_Probability", () => {
   });
   test("T2", () => {
     const n = 3;
-    const edges = [
+    const edges: [number, number][] = [
       [0, 1],
       [1, 2],
       [0, 2],
@@ -30,7 +30,7 @@ describe("LC/1514._Path_with_Maximum_Probability", () => {
   });
   test("T3", () => {
     const n = 3;
-    const edges = [[0, 1]];
+    const edges: [number, number][] = [[0, 1]];
     const succProb = [0.5];
     const start = 0;
     const end = 2;
