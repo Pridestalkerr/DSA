@@ -35,7 +35,7 @@ describe("LC/1905._Count_Sub_Islands", () => {
       [0, 1, 0, 1, 0],
       [1, 0, 0, 0, 1],
     ];
-    const output = 3;
+    const output = 2;
     expect(fn(grid1, grid2)).toBe(output);
   });
   test("T3", () => {});
