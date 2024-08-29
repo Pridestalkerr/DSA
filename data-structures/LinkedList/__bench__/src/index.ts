@@ -2,7 +2,76 @@ import { BenchCase } from "@dsa/bench";
 import { LinkedList } from "@dsa/linkedlist";
 import { LinkList } from "@js-sdsl/link-list";
 
-const x = new BenchCase("Linked List", ["init", "begin", "pushBack", "pushFront"]);
+const x = new BenchCase("Linked List", [
+  "ARRAY_VS_LIST_CACHE",
+  "init",
+  "begin",
+  "pushBack",
+  "pushFront",
+]);
+
+x.setCase("ARRAY_VS_LIST_CACHE", "Test case.")
+  .setCtx(() => {
+    const arr = Array.from({ length: 10000 }, () => {
+      // const size = Math.floor(Math.random() * 9) + 2;
+      const size = 500;
+      return {
+        arr: Array.from({ length: size }, () => Math.random()),
+        lookFor: Math.floor(Math.random() * size),
+      };
+    });
+
+    return {
+      arr: arr,
+      l1: Array.from(arr).map((x) => new LinkedList(x.arr)),
+      l2: Array.from(arr, (x) => Array.from(x.arr)),
+    };
+  })
+  .setBench((bench, ctx) => {
+    bench
+      .add(
+        "linkedlist",
+        () => {
+          let idx = 0;
+          for (const list of ctx.l1) {
+            const itr = ctx.arr[idx]!;
+            const look_for = itr.arr[itr.lookFor]!;
+            for (const node of list) {
+              if (node.data === look_for) {
+                list.eraseNode(node);
+                break;
+              }
+            }
+          }
+        },
+        {
+          afterEach: () => {
+            ctx.l1 = Array.from(ctx.arr).map((x) => new LinkedList(x.arr));
+          },
+        },
+      )
+      .add(
+        "array",
+        () => {
+          let idx = 0;
+          for (const arr of ctx.l2) {
+            const itr = ctx.arr[idx]!;
+            const look_for = itr.arr[itr.lookFor]!;
+            for (const elm of arr) {
+              if (elm === look_for) {
+                arr.splice(itr.lookFor, 1);
+                break;
+              }
+            }
+          }
+        },
+        {
+          afterEach: () => {
+            ctx.l2 = Array.from(ctx.arr, (x) => Array.from(x.arr));
+          },
+        },
+      );
+  });
 
 x.setCase("init", "Initialize from array.")
   .setCtx(() => {
