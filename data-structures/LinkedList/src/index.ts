@@ -55,7 +55,7 @@ export class LinkedList<T> {
   // ======================================
   // ==============CAPACITY================
   // ======================================
-  public empty() {
+  public get empty() {
     return this.size === 0;
   }
 
