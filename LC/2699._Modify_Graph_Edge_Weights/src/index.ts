@@ -23,23 +23,13 @@ export default function modifiedGraphEdges(
   //  - then we run it again, everytime we encounter a modifiable edge, we increase it by leftover
   //  - if at any point this value is greater than the shortest, then we stop and return []
 
-  // 1. process the edges
-  // ill be using a map representation
-  // source => destination => weight
-  const graph = new Map<number, Map<number, number>>();
-  for (const edge of EDGES) {
-    const [from, to, weight] = edge;
-    // outgoing
-    if (!graph.has(from)) {
-      graph.set(from, new Map());
-    }
-    graph.get(from)!.set(to, weight);
-
-    // incoming
-    if (!graph.has(to)) {
-      graph.set(to, new Map());
-    }
-    graph.get(to)!.set(from, weight);
+  // 1. process edges, lets use an adjacency list
+  // from => [to, edge_idx]
+  const adj: [number, number][][] = Array.from({ length: n }, () => []);
+  for (let i = 0; i < EDGES.length; i++) {
+    const [from, to, weight] = EDGES[i]!;
+    adj[from]!.push([to, i]);
+    adj[to]!.push([from, i]);
   }
 
   // 2. dijkstra, calculate the shortest possible distances, Math.abs(weight)
@@ -54,11 +44,12 @@ export default function modifiedGraphEdges(
       continue;
     }
     visited.add(curr.node);
-    const neighbors = graph.get(curr.node);
+    const neighbors = adj[curr.node];
     if (!neighbors) {
       continue;
     }
-    for (const [neighbor, weight] of neighbors.entries()) {
+    for (const [neighbor, idx] of neighbors) {
+      const [_, __, weight] = EDGES[idx]!;
       const newDist = dist[curr.node] + Math.abs(weight);
       if (newDist < dist[neighbor]) {
         dist[neighbor] = newDist;
@@ -101,11 +92,12 @@ export default function modifiedGraphEdges(
       continue;
     }
     visited2.add(curr.node);
-    const neighbors = graph.get(curr.node);
+    const neighbors = adj[curr.node];
     if (!neighbors) {
       continue;
     }
-    for (const [neighbor, weight] of neighbors.entries()) {
+    for (const [neighbor, idx] of neighbors) {
+      const [_, __, weight] = EDGES[idx]!;
       let w = Math.abs(weight);
       const shortestToNeighbor = dist[neighbor]; // this is dist[curr.node] + Math.abs(weight)
       // take this value, by how much should we increase it to expect leftover?
@@ -120,12 +112,7 @@ export default function modifiedGraphEdges(
         if (newWeight > w) {
           // save the biggest one
           w = newWeight;
-          neighbors.set(neighbor, w);
-          // other way around as well just to be sure
-          const other = graph.get(neighbor);
-          if (other) {
-            other.set(curr.node, w);
-          }
+          EDGES[idx]![2] = w;
         }
       }
       const newDist = dist2[curr.node] + w;
@@ -144,5 +131,6 @@ export default function modifiedGraphEdges(
     return [];
   }
 
+  // return what we modified earlier
   return EDGES.map(([from, to, weight]) => [from, to, Math.abs(weight)]);
 }
