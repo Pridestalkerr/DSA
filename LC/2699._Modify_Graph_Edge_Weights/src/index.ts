@@ -14,17 +14,14 @@ export default function modifiedGraphEdges(
   // in the other case
   // we assume it works, we change all negative weights to 1
   // all thats left is to pathfind from source to destination
-  // we only have to change a single edge
-  // if this value is smaller than target, then were set since we can choose any value
-  // we then return the modified edges (all negs to 1) and the one edge with leftover value
-  // dijkstra will find the shortest path
-  // our only issue is when theres multiple paths with the same weight
-  // for example, our modified edges have a weight of 1
-  // but other edges can too
-  // if theres 2 identical paths, we sort of have to soft force the path to go through the
-  // edge we modified
-  // we can stop dijkstra as soon as we have the shortest path
-  // we can keep a track of one of the modified edges that contributed
+  // we will obtain the shortest possible path
+  // now, this shortest path can be smaller than target
+  // we can just increase the weight of a modifiable edge
+  // but that could make it so that its no longer the shortest path
+  // to solve this:
+  //  - first run dijkstra with Math.abs(weight) to find shortest distances possible
+  //  - then we run it again, everytime we encounter a modifiable edge, we increase it by leftover
+  //  - if at any point this value is greater than the shortest, then we stop and return []
 
   // 1. process the edges
   // ill be using a map representation
@@ -45,13 +42,8 @@ export default function modifiedGraphEdges(
     graph.get(to)!.set(from, weight);
   }
 
-  // lets postpone the update of -1 to 1, we will have a check within dijkstra
-  // helps us know which nodes we can modify instead of keeping a set of them
-
-  // 2. dijkstra
+  // 2. dijkstra, calculate the shortest possible distances, Math.abs(weight)
   const dist = new Array(n).fill(Infinity);
-  // we will be using this to find the path at the end, and check if it has a modified edge
-  const prev = new Array(n).fill(undefined);
   dist[source] = 0;
   // lazy queue
   const visited = new Set<number>();
@@ -61,9 +53,6 @@ export default function modifiedGraphEdges(
     if (visited.has(curr.node)) {
       continue;
     }
-    if (curr.node === destination) {
-      break;
-    }
     visited.add(curr.node);
     const neighbors = graph.get(curr.node);
     if (!neighbors) {
@@ -72,64 +61,88 @@ export default function modifiedGraphEdges(
     for (const [neighbor, weight] of neighbors.entries()) {
       const newDist = dist[curr.node] + Math.abs(weight);
       if (newDist < dist[neighbor]) {
-        prev[neighbor] = [neighbor, curr.node, weight]; // these should be checked at the end
-        dist[neighbor] = newDist;
-        queue.push({ node: neighbor, weight: newDist });
-      } else if (newDist === dist[neighbor] && weight < 0) {
-        // tie, and negative edge, we take it!
-        prev[neighbor] = [neighbor, curr.node, weight];
         dist[neighbor] = newDist;
         queue.push({ node: neighbor, weight: newDist });
       }
     }
   }
+
+  console.log(dist);
 
   if (dist[destination] > target) {
-    return []; // nothing we can do here, we cant decrease values of the weights
+    return []; // nothing we can do here, shortest path is already greater than target
   }
 
-  console.log(dist[destination]);
+  // quick exit, when shortest path is already target
+  if (dist[destination] === target) {
+    return EDGES.map(([from, to, weight]) => [from, to, Math.abs(weight)]);
+  }
 
-  // 3. figure out if the shortest path has a modified edge
-  // we for sure have a path, since the graph is connected
-  // backtrack on prev
-  let hasModifiedEdge = false;
-  let modifiedEdge = undefined;
-  if (prev[destination] === undefined) {
-    return []; // will never happen but left for clarity
-  } else {
-    let u = prev[destination];
-    // source is different than destination so no need to check
-    while (u) {
-      if (u[2] < 0) {
-        // we have a modified edge
-        hasModifiedEdge = true;
-        modifiedEdge = u;
-        break;
+  // so far weve calculated the shortest possible distances by setting all weights to positive
+  // lets calculate the leftoever value, it will be strictly positive because of the previous checks
+  const diff = target - dist[destination];
+
+  // we now have to run dijkstra again, but this time we will attempt to modify edges by leftover
+  // we have access to the shortest distances at any time, in dist
+  // if we encounter a modifiable edge, instead of just setting it to +1,
+  // we will bump up that edge so that it matches the expected leftover distance
+  // we do this for EVERY modifiable edge, we end up with all the possible paths
+  // where the first time we hit the modifiable edge, that one is increased
+  const dist2 = new Array(n).fill(Infinity);
+  dist2[source] = 0;
+  const visited2 = new Set<number>();
+  const queue2 = new Heap({ compare: (a, b) => b.weight - a.weight }, [
+    { node: source, weight: 0 },
+  ]);
+
+  while (!queue2.empty) {
+    const curr = queue2.pop()!;
+    if (visited2.has(curr.node)) {
+      continue;
+    }
+    visited2.add(curr.node);
+    const neighbors = graph.get(curr.node);
+    if (!neighbors) {
+      continue;
+    }
+    for (const [neighbor, weight] of neighbors.entries()) {
+      let w = Math.abs(weight);
+      const shortestToNeighbor = dist[neighbor]; // this is dist[curr.node] + Math.abs(weight)
+      // take this value, by how much should we increase it to expect leftover?
+      const currDist = dist2[curr.node];
+      // we must match these somehow
+      if (weight < 0) {
+        // attempt to increase the current edge
+        // shortestDist = dist[curr.node] + Math.abs(weight)
+        // newWeight = dist[curr.node] + Math.abs(weight) + diff - dist[neighbor]
+        // maybe we cant increase it
+        const newWeight = diff + shortestToNeighbor - currDist;
+        if (newWeight > w) {
+          // save the biggest one
+          w = newWeight;
+          neighbors.set(neighbor, w);
+          // other way around as well just to be sure
+          const other = graph.get(neighbor);
+          if (other) {
+            other.set(curr.node, w);
+          }
+        }
       }
-      // keep going up
-      const parent = u[1]; // curr.node is where it came from
-      u = prev[parent];
+      const newDist = dist2[curr.node] + w;
+      if (newDist < dist2[neighbor]) {
+        dist2[neighbor] = newDist;
+        queue2.push({ node: neighbor, weight: newDist });
+      }
     }
   }
 
-  // 4. return if no modified edge available
-  if (!hasModifiedEdge) {
+  console.log(dist2);
+
+  // weve now obtained the shortest distance by attempting to increase all possible paths
+  // if this value is still smaller than target, then it means theres a shorter path that we cant modify
+  if (dist2[destination] < target) {
     return [];
   }
 
-  // 5. return all the edges, and the first modified edge we find with leftover value
-  for (const edge of EDGES) {
-    edge[2] = Math.abs(edge[2]);
-    const [from, to, _] = edge;
-    if (
-      (from === modifiedEdge[1] && to === modifiedEdge[0]) ||
-      (from === modifiedEdge[0] && to === modifiedEdge[1])
-    ) {
-      // edge case, this can be negative, taken into account as soon as we exit dijkstra
-      edge[2] = target - dist[destination] + 1;
-    }
-  }
-
-  return EDGES;
+  return EDGES.map(([from, to, weight]) => [from, to, Math.abs(weight)]);
 }
