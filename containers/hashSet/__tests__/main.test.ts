@@ -11,5 +11,10 @@ describe("HashSet", () => {
     expect(l.size).toBe(4);
     expect(l.find(1)).toBe(1);
     expect(l.find(4)).toBe(4);
+    expect(l.erase(4)).toBe(4);
+    expect(l.size).toBe(3);
+    expect(l.find(4)).toBe(undefined);
+    l.clear();
+    expect(l.size).toBe(0);
   });
 });
