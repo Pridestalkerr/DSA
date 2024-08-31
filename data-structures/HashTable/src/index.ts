@@ -75,6 +75,10 @@ export class HashTable<T> {
     return this.__findAllInBucket(bucket, key);
   }
 
+  public contains(key: T) {
+    return this.findFirst(key) !== undefined;
+  }
+
   // ======================================
   // ==============MODIFIERS===============
   // ======================================
