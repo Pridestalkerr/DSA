@@ -82,11 +82,7 @@ export interface HashSetConstructor {
   // i dont like adding an if statement to the insert function, it worsens performance
   new (
     keyType: "string",
-    {
-      from,
-      hashFn,
-      equalsFn,
-    }?: {
+    opts?: {
       from?: Iterable<string>;
       hashFn?: (key: string, cap: number) => number;
       equalsFn?: (a: string, b: string) => boolean;
@@ -94,11 +90,7 @@ export interface HashSetConstructor {
   ): HashSetLike<string>;
   new (
     keyType: "number",
-    {
-      from,
-      hashFn,
-      equalsFn,
-    }?: {
+    opts?: {
       from?: Iterable<number>;
       hashFn?: (key: number, cap: number) => number;
       equalsFn?: (a: number, b: number) => boolean;
@@ -106,11 +98,7 @@ export interface HashSetConstructor {
   ): HashSetLike<number>;
   new <T>(
     keyType: "other",
-    {
-      from,
-      hashFn,
-      equalsFn,
-    }?: {
+    opts: {
       from?: Iterable<T>;
       hashFn: (key: T, cap: number) => number; // muyst be provided, we can add more overloads later
       equalsFn?: (a: T, b: T) => boolean;
