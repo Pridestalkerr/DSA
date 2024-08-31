@@ -10,7 +10,7 @@ import { ForwardIterator } from "./iterator";
 export class HashTable<T> {
   // LENGTH OF THIS SHOULD BE A FIXED SIZE, NOT INCREASE RANDOMLY, RESIZE INSTEAD
   protected __buckets: Array<Bucket<T> | undefined>;
-  protected __filled: LinkedList<Bucket<T>>;
+  protected __filled: LinkedList<Bucket<T>>; // TODO: this might be worthless
   protected __size: number;
   protected static __INITIAL_SIZE = 32;
   protected static __LOAD_FACTOR = 0.75; // size / capacity
@@ -61,18 +61,18 @@ export class HashTable<T> {
   // ======================================
   public findFirst(key: T) {
     const bucket = this.__buckets[this.__getBucketIndex(key)];
-    if (!bucket || bucket.data.empty) {
+    if (!bucket || bucket.data.length === 0) {
       return undefined;
     }
-    return this.__findFirstNodeInBucket(bucket, key)?.data;
+    return this.__findFirstInBucket(bucket, key);
   }
 
   public findAll(key: T) {
     const bucket = this.__buckets[this.__getBucketIndex(key)];
-    if (!bucket || bucket.data.empty) {
+    if (!bucket || bucket.data.length === 0) {
       return [];
     }
-    return this.__findNodesInBucket(bucket, key);
+    return this.__findAllInBucket(bucket, key);
   }
 
   // ======================================
@@ -99,11 +99,11 @@ export class HashTable<T> {
 
     if (!bucket) {
       // not yet initialized, free to insert
-      this.__createBucket(bucketIdx).data.pushBack(key);
+      this.__createBucket(bucketIdx).data.push(key);
     } else if (this.__bucketHasKey(bucket, key)) {
       return false;
     } else {
-      bucket.data.pushBack(key);
+      bucket.data.push(key);
     }
 
     this.__size++;
@@ -120,9 +120,9 @@ export class HashTable<T> {
 
     if (!bucket) {
       // not yet initialized, free to insert
-      this.__createBucket(bucketIdx).data.pushBack(key);
+      this.__createBucket(bucketIdx).data.push(key);
     } else {
-      bucket.data.pushBack(key);
+      bucket.data.push(key);
     }
 
     this.__size++;
@@ -136,17 +136,15 @@ export class HashTable<T> {
       return undefined; // nothing to erase
     }
 
-    const it = this.__findInBucket(bucket, key);
-    if (it === undefined) {
-      return undefined;
+    for (let i = 0; i < bucket.data.length; i++) {
+      const curr = bucket.data[i]!;
+      if (this.__equals(curr, key)) {
+        bucket.data.splice(i, 1);
+        this.__size--;
+        return curr;
+      }
     }
-
-    const erased = it.value;
-    bucket.data.erase(it);
-    this.__size--;
-
-    if (bucket.data.empty) {
-    }
+    return undefined;
   }
 
   // ======================================
@@ -157,8 +155,8 @@ export class HashTable<T> {
   }
 
   protected __bucketHasKey(bucket: Bucket<T>, key: T): boolean {
-    for (const k of bucket.data) {
-      if (this.__equals(k.data, key)) {
+    for (const keyitr of bucket.data) {
+      if (this.__equals(keyitr, key)) {
         return true;
       }
     }
@@ -183,23 +181,23 @@ export class HashTable<T> {
     return avg / this.__buckets.length;
   }
 
-  protected __findFirstNodeInBucket(bucket: Bucket<T>, key: T) {
+  protected __findFirstInBucket(bucket: Bucket<T>, key: T) {
     // TODO: this will be slow i think
     // perhaps its better to expose the linkedlist internals
     // and do it inline
-    for (const node of bucket.data) {
-      if (this.__equals(node.data, key)) {
-        return node;
+    for (const keyitr of bucket.data) {
+      if (this.__equals(keyitr, key)) {
+        return keyitr;
       }
     }
     return undefined;
   }
 
-  protected __findNodesInBucket(bucket: Bucket<T>, key: T) {
+  protected __findAllInBucket(bucket: Bucket<T>, key: T) {
     const result = [];
-    for (const node of bucket.data) {
-      if (this.__equals(node.data, key)) {
-        result.push(node);
+    for (const keyitr of bucket.data) {
+      if (this.__equals(keyitr, key)) {
+        result.push(keyitr);
       }
     }
     return result;
@@ -216,16 +214,14 @@ export class HashTable<T> {
 
     for (const node of this.__filled) {
       const bucket = node.data;
-      for (const node of bucket.data) {
-        const key = node.data;
+      for (const key of bucket.data) {
         const index = this.__hash(key, newBuckets.length);
-
         const newBucket = newBuckets[index];
 
         if (!newBucket) {
           this.__createBucket(index, newBuckets, newFilled);
         }
-        newBuckets[index]!.data.pushBack(key);
+        newBuckets[index]!.data.push(key);
       }
     }
 
@@ -235,7 +231,7 @@ export class HashTable<T> {
 
   protected __createBucket(index: number, buckets = this.__buckets, filled = this.__filled) {
     const newBucket: Bucket<T> = {
-      data: new LinkedList<T>(),
+      data: new Array(),
       meta: undefined,
     };
     filled.pushBack(newBucket);
