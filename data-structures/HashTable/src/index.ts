@@ -1,7 +1,6 @@
-import { CMP } from "@dsa/common";
+import { CMP, Hash } from "@dsa/common";
 import { LinkedList } from "@dsa/linkedlist";
 import { Bucket } from "./bucket";
-import { ForwardIterator } from "./iterator";
 
 // NOTE:
 // a linked list for collisions might work nice in theory
@@ -21,15 +20,13 @@ export class HashTable<T> {
   protected __equals: CMP.EQ<T>;
   protected __hash: (key: T, cap: number) => number;
 
-  constructor();
-  constructor() {
+  constructor(hashFn: Hash.Fn<T>, equalsFn: CMP.EQ<T>, from?: Iterable<T>) {
     this.__buckets = new Array(HashTable.__INITIAL_SIZE);
     this.__filled = new LinkedList();
     this.__size = 0;
-    this.__equals = CMP.defaultEquals;
-    this.__hash = (key: T, cap: number) => {
-      return Number(key) % cap;
-    };
+    this.__equals = equalsFn;
+    this.__hash = hashFn;
+    // TODO: quickly populate with values from iterable
   }
 
   // ======================================
@@ -212,8 +209,8 @@ export class HashTable<T> {
     return this.__loadFactor() > HashTable.__LOAD_FACTOR;
   }
 
-  protected __resize() {
-    const newBuckets = new Array<Bucket<T>>(this.__buckets.length * HashTable.__GROWTH_FACTOR);
+  protected __resize(cap: number = this.__buckets.length * HashTable.__GROWTH_FACTOR) {
+    const newBuckets = new Array<Bucket<T>>(cap);
     const newFilled = new LinkedList<Bucket<T>>();
 
     for (const node of this.__filled) {
@@ -243,9 +240,4 @@ export class HashTable<T> {
     buckets[index] = newBucket;
     return newBucket;
   }
-}
-
-export interface HashTableConstructor {
-  new <T>(): HashTable<T>;
-  new <T>(iterable: Iterable<T>): HashTable<T>;
 }
