@@ -27,6 +27,8 @@ export class HashTable<T> {
     this.__equals = equalsFn;
     this.__hash = hashFn;
     // TODO: quickly populate with values from iterable
+    // we need to quickly find the best __INITIAL_SIZE that fits the data
+    // and then insert all the values
   }
 
   // ======================================
@@ -209,7 +211,25 @@ export class HashTable<T> {
     return this.__loadFactor() > HashTable.__LOAD_FACTOR;
   }
 
+  // given a total size, how many buckets would be needed
+  protected __expectedCapacity(total: number) {
+    // const minBuckets = Math.ceil(total / HashTable.__LOAD_FACTOR);
+    // const iterations =
+    //   Math.ceil(Math.log2(minBuckets / HashTable.__INITIAL_SIZE)) /
+    //   Math.log2(HashTable.__GROWTH_FACTOR);
+    // const cap = Math.pow(HashTable.__GROWTH_FACTOR, iterations) * HashTable.__INITIAL_SIZE;
+    // return Math.max(HashTable.__INITIAL_SIZE, minBuckets);
+    // TODO: could bench the above
+    let cap = HashTable.__INITIAL_SIZE;
+    while (cap * HashTable.__LOAD_FACTOR < total) {
+      cap >>= 1;
+    }
+    return cap;
+  }
+
   protected __resize(cap: number = this.__buckets.length * HashTable.__GROWTH_FACTOR) {
+    if (this.__size === 0) return;
+
     const newBuckets = new Array<Bucket<T>>(cap);
     const newFilled = new LinkedList<Bucket<T>>();
 
