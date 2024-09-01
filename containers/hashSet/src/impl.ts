@@ -7,7 +7,7 @@ export class HashSetBase<T> implements HashSetLike<T> {
     keyType: DefaultKeys,
     options?: {
       from?: Iterable<T>;
-      hashFn?: (key: T, cap: number) => number;
+      hashFn?: Hash.Fn<T>;
       equalsFn?: (a: T, b: T) => boolean;
     },
   ) {
@@ -17,16 +17,16 @@ export class HashSetBase<T> implements HashSetLike<T> {
     if (!hashFn) {
       switch (keyType) {
         case "string":
-          hashFn = Hash.stringHash as (key: T, cap: number) => number;
+          hashFn = Hash.stringHash as Hash.Fn<T>;
           break;
         case "int32":
-          hashFn = Hash.int32Hash as (key: T, cap: number) => number;
+          hashFn = Hash.int32Hash as Hash.Fn<T>;
           break;
         case "number":
-          hashFn = Hash.bigHash as (key: T, cap: number) => number;
+          hashFn = Hash.bigHash as Hash.Fn<T>;
           break;
         case "bigint":
-          hashFn = Hash.bigHash as (key: T, cap: number) => number;
+          hashFn = Hash.bigHash as Hash.Fn<T>;
           break;
         case "other":
           throw new Error("hashFn must be provided for keyType 'other'");
@@ -84,40 +84,36 @@ interface HashSetLike<T> {
 export type DefaultKeys = "string" | "int32" | "number" | "bigint" | "other";
 
 export interface HashSetConstructor {
-  // these have a default hash function
-  // how to postpone the retrieval of that function
-  // so that the user doesnt have to pass it explicitly everytime?
-  // i dont like adding an if statement to the insert function, it worsens performance
   new (
     keyType: "string",
     opts?: {
       from?: Iterable<string>;
-      hashFn?: (key: string, cap: number) => number;
-      equalsFn?: (a: string, b: string) => boolean;
+      hashFn?: Hash.Fn<string>;
+      equalsFn?: CMP.EQ<string>;
     },
   ): HashSetLike<string>;
   new (
     keyType: "int32" | "number",
     opts?: {
       from?: Iterable<number>;
-      hashFn?: (key: number, cap: number) => number;
-      equalsFn?: (a: number, b: number) => boolean;
+      hashFn?: Hash.Fn<number>;
+      equalsFn?: CMP.EQ<number>;
     },
   ): HashSetLike<number>;
   new (
     keyType: "bigint",
     opts?: {
       from?: Iterable<bigint>;
-      hashFn?: (key: bigint, cap: number) => number;
-      equalsFn?: (a: bigint, b: bigint) => boolean;
+      hashFn?: Hash.Fn<bigint>;
+      equalsFn?: CMP.EQ<bigint>;
     },
   ): HashSetLike<number>;
   new <T>(
     keyType: "other",
     opts: {
       from?: Iterable<T>;
-      hashFn: (key: T, cap: number) => number; // muyst be provided, we can add more overloads later
-      equalsFn?: (a: T, b: T) => boolean;
+      hashFn: Hash.Fn<T>; // must be provided, we can add more overloads later
+      equalsFn?: CMP.EQ<T>;
     },
   ): HashSetLike<T>;
 }
