@@ -4,7 +4,7 @@ import { CMP, Hash } from "@dsa/common";
 export class HashSetBase<T> implements HashSetLike<T> {
   protected __table: HashTable<T>;
   constructor(
-    keyType: "string" | "number" | "other",
+    keyType: DefaultKeys,
     options?: {
       from?: Iterable<T>;
       hashFn?: (key: T, cap: number) => number;
@@ -19,8 +19,14 @@ export class HashSetBase<T> implements HashSetLike<T> {
         case "string":
           hashFn = Hash.stringHash as (key: T, cap: number) => number;
           break;
+        case "int32":
+          hashFn = Hash.int32Hash as (key: T, cap: number) => number;
+          break;
         case "number":
-          hashFn = Hash.numberHash as (key: T, cap: number) => number;
+          hashFn = Hash.bigHash as (key: T, cap: number) => number;
+          break;
+        case "bigint":
+          hashFn = Hash.bigHash as (key: T, cap: number) => number;
           break;
         case "other":
           throw new Error("hashFn must be provided for keyType 'other'");
@@ -75,6 +81,8 @@ interface HashSetLike<T> {
   contains(key: T): boolean;
 }
 
+export type DefaultKeys = "string" | "int32" | "number" | "bigint" | "other";
+
 export interface HashSetConstructor {
   // these have a default hash function
   // how to postpone the retrieval of that function
@@ -89,11 +97,19 @@ export interface HashSetConstructor {
     },
   ): HashSetLike<string>;
   new (
-    keyType: "number",
+    keyType: "int32" | "number",
     opts?: {
       from?: Iterable<number>;
       hashFn?: (key: number, cap: number) => number;
       equalsFn?: (a: number, b: number) => boolean;
+    },
+  ): HashSetLike<number>;
+  new (
+    keyType: "bigint",
+    opts?: {
+      from?: Iterable<bigint>;
+      hashFn?: (key: bigint, cap: number) => number;
+      equalsFn?: (a: bigint, b: bigint) => boolean;
     },
   ): HashSetLike<number>;
   new <T>(

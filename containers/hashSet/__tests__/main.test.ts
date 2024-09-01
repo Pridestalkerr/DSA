@@ -3,7 +3,7 @@ import { HashSet } from "../src/index";
 
 describe("HashSet", () => {
   test("early", () => {
-    const l = new HashSet("number");
+    const l = new HashSet("int32");
     l.insert(1);
     l.insert(2);
     l.insert(3);
