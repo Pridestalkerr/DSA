@@ -23,7 +23,7 @@ describe("LC/2022._Convert_1D_Array_Into_2D_Array", () => {
     const original = [1, 2];
     const m = 1;
     const n = 1;
-    const output = [];
+    const output: number[] = [];
     expect(fn(original, m, n)).toStrictEqual(output);
   });
 });
