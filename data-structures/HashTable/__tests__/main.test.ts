@@ -1,14 +1,19 @@
 import { describe, expect, test } from "@jest/globals";
-import { HashTable } from "../src/save";
+import { HashTable } from "../src/index";
+import { Hash, CMP } from "@dsa/common";
 
-describe("RBTree", () => {
+describe("HashTable", () => {
   //   type T = {
   //     key: number;
   //     whatever: string;
   //   };
   //   const objCmp = (a: T, b: T) => b.key - a.key;
-  test("MINHEAP", () => {
-    const t = new HashTable<number>();
+  test("common", () => {
+    const t = new HashTable<number>(
+      Hash.int32Hash,
+      CMP.defaultEquals,
+      Array.from({ length: 100 }, () => Math.random()),
+    );
     t.insertUnique(1);
     t.insertUnique(2);
     t.insertUnique(3);

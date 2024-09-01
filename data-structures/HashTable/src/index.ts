@@ -20,15 +20,30 @@ export class HashTable<T> {
   protected __equals: CMP.EQ<T>;
   protected __hash: (key: T, cap: number) => number;
 
-  constructor(hashFn: Hash.Fn<T>, equalsFn: CMP.EQ<T>, from?: Iterable<T>) {
-    this.__buckets = new Array(HashTable.__INITIAL_SIZE);
+  constructor(
+    hashFn: Hash.Fn<T>,
+    equalsFn: CMP.EQ<T>,
+    from?: Iterable<T> & { length?: number },
+    unique = true,
+  ) {
     this.__filled = new LinkedList();
     this.__size = 0;
     this.__equals = equalsFn;
     this.__hash = hashFn;
-    // TODO: quickly populate with values from iterable
-    // we need to quickly find the best __INITIAL_SIZE that fits the data
-    // and then insert all the values
+
+    const len = from ? (from.length ?? [...from].length) : HashTable.__INITIAL_SIZE;
+    const cap = this.__expectedCapacity(len);
+    this.__buckets = new Array(cap);
+
+    // TODO: inline this
+    if (from) {
+      const insertFn = unique
+        ? this.__insertUniqueUnsafe.bind(this)
+        : this.__insertUnsafe.bind(this);
+      for (const key of from) {
+        insertFn(key);
+      }
+    }
   }
 
   // ======================================
@@ -90,18 +105,20 @@ export class HashTable<T> {
     // if an iterator is left alive, this memory will leak forever, is that a problem?
   }
 
-  // TODO: lots of if statements here, see if we can do better
   public insertUnique(key: T): boolean {
-    // TODO: make sure this resizes exactly when needed, capacity should never increase manually
     if (this.__shouldResize()) {
+      // TODO: this check can be precomputed!
       this.__resize();
     }
 
+    return this.__insertUniqueUnsafe(key);
+  }
+
+  protected __insertUniqueUnsafe(key: T): boolean {
     const bucketIdx = this.__getBucketIndex(key);
     const bucket = this.__buckets[bucketIdx];
 
     if (!bucket) {
-      // not yet initialized, free to insert
       this.__createBucket(bucketIdx).data.push(key);
     } else if (this.__bucketHasKey(bucket, key)) {
       return false;
@@ -113,23 +130,25 @@ export class HashTable<T> {
     return true;
   }
 
-  public insert(key: T): true {
+  public insert(key: T) {
     if (this.__shouldResize()) {
       this.__resize();
     }
 
+    this.__insertUnsafe(key);
+  }
+
+  protected __insertUnsafe(key: T) {
     const bucketIdx = this.__getBucketIndex(key);
     const bucket = this.__buckets[bucketIdx];
 
     if (!bucket) {
-      // not yet initialized, free to insert
       this.__createBucket(bucketIdx).data.push(key);
     } else {
       bucket.data.push(key);
     }
 
     this.__size++;
-    return true;
   }
 
   public eraseOne(key: T) {
@@ -222,7 +241,7 @@ export class HashTable<T> {
     // TODO: could bench the above
     let cap = HashTable.__INITIAL_SIZE;
     while (cap * HashTable.__LOAD_FACTOR < total) {
-      cap >>= 1;
+      cap <<= 1;
     }
     return cap;
   }
