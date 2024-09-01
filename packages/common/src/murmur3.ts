@@ -18,8 +18,7 @@ function __fmix32(h: number) {
   return h;
 }
 
-export function murmur3(key: string, seed: number = 0): number {
-  const data = __encoder.encode(key);
+export function murmur3base(data: Uint8Array, seed: number = 0) {
   const len = data.length;
   const nblocks = len >> 2;
 
@@ -68,4 +67,9 @@ export function murmur3(key: string, seed: number = 0): number {
   h1 = __fmix32(h1);
 
   return h1 >>> 0; // Ensure unsigned 32-bit
+}
+
+export function murmur3(key: string, seed: number = 0): number {
+  const data = __encoder.encode(key);
+  return murmur3base(data, seed);
 }
