@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import { Set } from "../src";
 
-describe("RBTree", () => {
+describe("Set", () => {
   type T = {
     key: number;
     whatever: string;
